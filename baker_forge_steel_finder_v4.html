@@ -22,8 +22,27 @@
 html,body{background:var(--dark);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.6;min-height:100vh}
 body::before{content:'';position:fixed;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,.012) 2px,rgba(255,255,255,.012) 3px),repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,255,255,.008) 40px,rgba(255,255,255,.008) 41px);pointer-events:none;z-index:0}
 .wrap{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:32px 24px 64px}
+
+/* ── Gate styles ── */
+.gate-wrap{text-align:center;padding:48px 24px}
+.gate-logo{font-family:var(--hd);font-weight:800;font-size:28px;letter-spacing:.05em;text-transform:uppercase;color:var(--text);margin-bottom:4px}
+.gate-logo span{color:var(--or)}
+.gate-sub{font-size:14px;color:var(--text-dim);margin-bottom:32px;line-height:1.6;max-width:480px;margin-left:auto;margin-right:auto}
+.gate-form{background:var(--dark2);border:1px solid var(--border);padding:28px;max-width:420px;margin:0 auto}
+.gate-form h2{font-family:var(--hd);font-weight:700;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:var(--text);margin-bottom:6px}
+.gate-form p{font-size:13px;color:var(--text-dim);margin-bottom:20px;line-height:1.5}
+.gate-field{margin-bottom:14px;text-align:left}
+.gate-field label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:5px}
+.gate-field input{width:100%;background:var(--dark3);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:14px;padding:10px 12px;outline:none;transition:border-color .15s}
+.gate-field input:focus{border-color:var(--or)}
+.gate-btn{width:100%;padding:13px;background:var(--or);color:white;border:none;font-family:var(--hd);font-weight:700;font-size:16px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background .15s;margin-top:4px}
+.gate-btn:hover{background:var(--orl)}
+.gate-fine{font-size:11px;color:var(--text-muted);margin-top:10px}
+.gate-proof{font-size:12px;color:var(--text-muted);margin-top:20px;font-style:italic}
+
+/* ── Finder styles ── */
 .hdr{border-left:3px solid var(--or);padding:1rem 1.25rem;background:var(--dark2);margin-bottom:1.25rem}
-.hdr h1{font-family:var(--hd);font-weight:800;font-size:22px;letter-spacing:.05em;text-transform:uppercase;color:var(--text);margin-bottom:3px}
+.hdr h1{font-family:var(--hd);font-weight:800;font-size:22px;letter-spacing:.05em;text-transform:uppercase;color:var(--text);margin-bottom:2px}
 .hdr p{font-size:13px;color:var(--text-dim);line-height:1.5}
 .bf-note{display:flex;align-items:flex-start;gap:8px;background:var(--dark3);border:0.5px solid var(--border-lt);padding:9px 12px;margin-bottom:14px;font-size:12px;color:var(--text-dim);line-height:1.5}
 .bf-note strong{color:var(--text)}
@@ -106,371 +125,458 @@ body::before{content:'';position:fixed;inset:0;background-image:repeating-linear
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <div class="hdr">
-    <h1>Steel Size Finder</h1>
-    <p>Enter your finished blade dimensions. We'll search our inventory by SKU and find billets that fit your project — grind stock factored in automatically.</p>
-  </div>
-
-  <div class="bf-note">
-    <div class="bf-dot"></div>
-    <div><strong>All Baker Forge billets are fully Blanchard ground flat.</strong> Your spine thickness will be very close to the billet thickness — only a light cleanup pass needed. Width and length still include grind stock for profiling.</div>
-  </div>
-
-  <div class="sec-label">Your finished blade dimensions</div>
-  <div class="g3">
-    <div class="field">
-      <label>Blade length</label>
-      <input type="number" id="bl" placeholder="4.5" step="0.125" min="0" inputmode="decimal">
-      <div class="hint">tip to ricasso, inches</div>
-    </div>
-    <div class="field">
-      <label>Blade width</label>
-      <input type="number" id="bw" placeholder="1.375" step="0.125" min="0" inputmode="decimal">
-      <div class="hint">widest point, inches</div>
-    </div>
-    <div class="field">
-      <label>Spine thickness</label>
-      <input type="number" id="bt" placeholder="0.125" step="0.0625" min="0" inputmode="decimal">
-      <div class="hint good">Blanchard ground — billet thickness matches closely</div>
+<!-- ═══════════════════════════════════════════════════════════
+     GATE SECTION — hidden once unlocked
+═══════════════════════════════════════════════════════════ -->
+<div id="gate-section">
+  <div class="wrap">
+    <div class="gate-wrap">
+      <div class="gate-logo">Baker <span>Forge</span> & Tool</div>
+      <p class="gate-sub">Enter your blade dimensions and we'll search our live inventory to find billets that fit — grind stock calculated automatically.</p>
+      <div class="gate-form">
+        <h2>Unlock the Steel Finder</h2>
+        <p>Free access. We'll send you a copy of your results.</p>
+        <div class="gate-field">
+          <label>First name</label>
+          <input type="text" id="gate-fn" placeholder="Your name">
+        </div>
+        <div class="gate-field">
+          <label>Email address</label>
+          <input type="email" id="gate-em" placeholder="you@yourshop.com">
+        </div>
+        <button class="gate-btn" onclick="submitGate()">UNLOCK THE TOOL &rarr;</button>
+        <p class="gate-fine">Free. No spam. Unsubscribe anytime.</p>
+      </div>
+      <p class="gate-proof">Used by knifemakers at Microtech, Half Face Blades, and thousands of independent makers.</p>
     </div>
   </div>
-
-  <div class="g2">
-    <div class="field">
-      <label>Tang type</label>
-      <select id="tang" onchange="updateTangNote();updatePreview()">
-        <option value="hidden">Hidden tang</option>
-        <option value="full">Full tang</option>
-        <option value="weld">Weld-on tang</option>
-      </select>
-      <div id="tang-note" class="tang-note"></div>
-    </div>
-    <div class="field">
-      <label>Steel preference</label>
-      <select id="spref">
-        <option value="any">Any — show all matches</option>
-        <option value="carbon">Carbon Damascus</option>
-        <option value="stainless">Stainless Damascus</option>
-        <option value="coppermai">CopperMai</option>
-        <option value="bronzemai">BronzeMai</option>
-        <option value="mosaic">Mosaic Damascus</option>
-        <option value="core">Core Line</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="toggle-row">
-    <input type="checkbox" id="grind" checked>
-    <label for="grind">Add grind stock allowance to length and width</label>
-  </div>
-
-  <div id="preview" class="preview-box">
-    <div class="lbl">Required billet size</div>
-    <div class="val" id="pv-val"></div>
-    <div class="breakdown" id="pv-breakdown"></div>
-  </div>
-
-  <button class="go-btn" onclick="runSearch()">Search inventory</button>
-
-  <div id="results-wrap" style="display:none">
-    <div class="divider"></div>
-    <div id="results-inner"></div>
-  </div>
-
-  <div class="footer">
-    <a href="https://bakerforge.com" target="_blank">bakerforge.com</a> &nbsp;·&nbsp;
-    Baker Forge &amp; Tool · Boone, NC &nbsp;·&nbsp;
-    <a href="mailto:support@bakerforge.com">support@bakerforge.com</a>
-  </div>
-
 </div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FINDER SECTION — shown once unlocked
+═══════════════════════════════════════════════════════════ -->
+<div id="finder-section" style="display:none">
+  <div class="wrap">
+
+    <div class="hdr">
+      <h1>Steel Size Finder</h1>
+      <p>Enter your finished blade dimensions. We'll search our inventory by SKU and find billets that fit — grind stock factored in automatically.</p>
+    </div>
+
+    <div class="bf-note">
+      <div class="bf-dot"></div>
+      <div><strong>All Baker Forge billets are fully Blanchard ground flat.</strong> Your spine thickness will be very close to the billet thickness — only a light cleanup pass needed. Width and length still include grind stock for profiling.</div>
+    </div>
+
+    <div class="sec-label">Your finished blade dimensions</div>
+    <div class="g3">
+      <div class="field">
+        <label>Blade length</label>
+        <input type="number" id="bl" placeholder="4.5" step="0.125" min="0" inputmode="decimal">
+        <div class="hint">tip to ricasso, inches</div>
+      </div>
+      <div class="field">
+        <label>Blade width</label>
+        <input type="number" id="bw" placeholder="1.375" step="0.125" min="0" inputmode="decimal">
+        <div class="hint">widest point, inches</div>
+      </div>
+      <div class="field">
+        <label>Spine thickness</label>
+        <input type="number" id="bt" placeholder="0.125" step="0.0625" min="0" inputmode="decimal">
+        <div class="hint good">Blanchard ground — billet thickness matches closely</div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="field">
+        <label>Tang type</label>
+        <select id="tang" onchange="updateTangNote();updatePreview()">
+          <option value="hidden">Hidden tang</option>
+          <option value="full">Full tang</option>
+          <option value="weld">Weld-on tang</option>
+        </select>
+        <div id="tang-note" class="tang-note"></div>
+      </div>
+      <div class="field">
+        <label>Steel preference</label>
+        <select id="spref">
+          <option value="any">Any — show all matches</option>
+          <option value="carbon">Carbon Damascus</option>
+          <option value="stainless">Stainless Damascus</option>
+          <option value="coppermai">CopperMai</option>
+          <option value="bronzemai">BronzeMai</option>
+          <option value="mosaic">Mosaic Damascus</option>
+          <option value="core">Core Line</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="toggle-row">
+      <input type="checkbox" id="grind" checked>
+      <label for="grind">Add grind stock allowance to length and width</label>
+    </div>
+
+    <div id="preview" class="preview-box">
+      <div class="lbl">Required billet size</div>
+      <div class="val" id="pv-val"></div>
+      <div class="breakdown" id="pv-breakdown"></div>
+    </div>
+
+    <button class="go-btn" onclick="runSearch()">Search inventory</button>
+
+    <div id="results-wrap" style="display:none">
+      <div class="divider"></div>
+      <div id="results-inner"></div>
+    </div>
+
+    <div class="footer">
+      <a href="https://bakerforge.com" target="_blank">bakerforge.com</a> &nbsp;&middot;&nbsp;
+      Baker Forge &amp; Tool &middot; Boone, NC &nbsp;&middot;&nbsp;
+      <a href="mailto:support@bakerforge.com">support@bakerforge.com</a>
+    </div>
+
+  </div>
+</div>
+
 <script>
-// ─── Tang configuration ──────────────────────────────────────────────────────
-const TANG={
-  hidden:{addL:4,   gsL:.20,label:'Hidden tang',   note:'4" added to billet length for the tang stub.'},
-  full:  {addL:5,   gsL:.15,label:'Full tang',     note:'5" added to billet length — tang runs the full handle.'},
-  weld:  {addL:0,   gsL:.20,label:'Weld-on tang',  note:'No length added — you\'ll weld scrap steel onto the blade. Billet only needs to cover the blade profile.'},
+// ═══════════════════════════════════════════════════════════════════════
+// WIX INTEGRATION BRIDGE
+// Listens for messages from the Wix page code:
+//   WIX_MEMBER     → logged-in user, skip gate entirely
+//   CAPTURE_RESULT → CRM save confirmed, unlock tool
+// ═══════════════════════════════════════════════════════════════════════
+window.addEventListener("message", function(e) {
+  if (!e.data || !e.data.type) return;
+
+  if (e.data.type === "WIX_MEMBER") {
+    localStorage.setItem("bfSteelFinder", JSON.stringify({
+      unlocked: true,
+      firstName: e.data.firstName,
+      email: e.data.email
+    }));
+    unlockTool();
+  }
+
+  if (e.data.type === "CAPTURE_RESULT" && e.data.success) {
+    unlockTool();
+  }
+});
+
+// Check localStorage on page load — returning visitors skip gate
+(function() {
+  try {
+    const saved = localStorage.getItem("bfSteelFinder");
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data && data.unlocked) {
+        document.addEventListener("DOMContentLoaded", unlockTool);
+      }
+    }
+  } catch(e) {}
+})();
+
+function unlockTool() {
+  const g = document.getElementById("gate-section");
+  const f = document.getElementById("finder-section");
+  if (g) g.style.display = "none";
+  if (f) f.style.display = "block";
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// GATE FORM SUBMISSION
+// Posts to Wix page code for CRM capture, unlocks immediately
+// ═══════════════════════════════════════════════════════════════════════
+function submitGate() {
+  const fn = document.getElementById("gate-fn").value.trim();
+  const em = document.getElementById("gate-em").value.trim();
+  if (!fn || !em) { alert("Please enter your name and email address."); return; }
+
+  localStorage.setItem("bfSteelFinder", JSON.stringify({
+    unlocked: true, firstName: fn, email: em
+  }));
+
+  window.parent.postMessage({ type: "CAPTURE_EMAIL", firstName: fn, email: em }, "*");
+
+  unlockTool();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// TANG CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════════
+const TANG = {
+  hidden: { addL:4,   gsL:.20, label:"Hidden tang",    note:"4\" added to billet length for the tang stub." },
+  full:   { addL:5,   gsL:.15, label:"Full tang",      note:"5\" added to billet length — tang runs the full handle." },
+  weld:   { addL:0,   gsL:.20, label:"Weld-on tang",   note:"No length added — you'll weld scrap steel onto the blade. Billet only needs to cover the blade profile." },
 };
-const T_GRIND=0.05; // thickness cleanup only — Blanchard ground
+const T_GRIND = 0.05;
 
-// ─── SKU parser ──────────────────────────────────────────────────────────────
-// Handles: 16.25x2.5x0.165 / 16.25 x 2.5 x 0.165 / 16.25X2.5X0.165 / 16.25×2.5×0.165
-function parseSKU(sku){
-  const SEP='\\s*[xX\u00d7]\\s*';
-  const NUM='(\\d{1,3}(?:\\.\\d+)?)';
-  const PAT=new RegExp(NUM+SEP+NUM+SEP+NUM);
-  const str=sku.includes('/')?sku.split('/').pop():sku;
-  const m=str.trim().match(PAT);
-  if(!m) return null;
-  return{l:parseFloat(m[1]),w:parseFloat(m[2]),t:parseFloat(m[3]),label:`${m[1]} x ${m[2]} x ${m[3]}`};
+// ═══════════════════════════════════════════════════════════════════════
+// SKU PARSER
+// Handles: 16.25x2.5x0.165 / 16.25 x 2.5 x 0.165 / 16.25X2.5X0.165
+// ═══════════════════════════════════════════════════════════════════════
+function parseSKU(sku) {
+  const SEP = "\\s*[xX\u00d7]\\s*";
+  const NUM = "(\\d{1,3}(?:\\.\\d+)?)";
+  const PAT = new RegExp(NUM + SEP + NUM + SEP + NUM);
+  const str = sku.includes("/") ? sku.split("/").pop() : sku;
+  const m = str.trim().match(PAT);
+  if (!m) return null;
+  return { l: parseFloat(m[1]), w: parseFloat(m[2]), t: parseFloat(m[3]),
+           label: m[1] + " x " + m[2] + " x " + m[3] };
 }
 
-// ─── Billet calculation ──────────────────────────────────────────────────────
-const roundUp=(v,i)=>Math.ceil(v/i)*i;
-const fmt=n=>parseFloat(n.toFixed(4)).toString();
-const fmtDim=(l,w,t)=>`${fmt(l)}" × ${fmt(w)}" × ${fmt(t)}"`;
+// ═══════════════════════════════════════════════════════════════════════
+// BILLET CALCULATION
+// ═══════════════════════════════════════════════════════════════════════
+const roundUp = (v, i) => Math.ceil(v / i) * i;
+const fmt = n => parseFloat(n.toFixed(4)).toString();
+const fmtDim = (l, w, t) => fmt(l) + "\" \u00d7 " + fmt(w) + "\" \u00d7 " + fmt(t) + "\"";
 
-function calcBillet(bl,bw,bt,tang,grind){
-  const meta=TANG[tang]||TANG.hidden;
-  const gsL=grind?meta.gsL:0;
-  const gsW=grind?.20:0;
-  const reqL=roundUp((bl*(1+gsL))+meta.addL,.25);
-  const reqW=roundUp(bw*(1+gsW),.125);
-  const reqT=roundUp(bt*(1+T_GRIND),.0625);
-  const lines=[];
-  if(tang==='weld') lines.push(`L: ${bl}" + ${Math.round(gsL*100)}% grind = ${fmt(reqL)}" (no tang add — weld-on)`);
-  else lines.push(`L: ${bl}" + ${Math.round(gsL*100)}% grind + ${meta.addL}" tang = ${fmt(reqL)}"`);
-  lines.push(`W: ${bw}" + ${Math.round(gsW*100)}% grind = ${fmt(reqW)}"`);
-  lines.push(`T: ${bt}" + 5% cleanup (Blanchard ground) = ${fmt(reqT)}"`);
-  return{reqL,reqW,reqT,lines};
+function calcBillet(bl, bw, bt, tang, grind) {
+  const meta = TANG[tang] || TANG.hidden;
+  const gsL = grind ? meta.gsL : 0;
+  const gsW = grind ? 0.20 : 0;
+  const reqL = roundUp((bl * (1 + gsL)) + meta.addL, 0.25);
+  const reqW = roundUp(bw * (1 + gsW), 0.125);
+  const reqT = roundUp(bt * (1 + T_GRIND), 0.0625);
+  const lines = [];
+  if (tang === "weld") lines.push("L: " + bl + "\" + " + Math.round(gsL*100) + "% grind = " + fmt(reqL) + "\" (no tang add \u2014 weld-on)");
+  else lines.push("L: " + bl + "\" + " + Math.round(gsL*100) + "% grind + " + meta.addL + "\" tang = " + fmt(reqL) + "\"");
+  lines.push("W: " + bw + "\" + " + Math.round(gsW*100) + "% grind = " + fmt(reqW) + "\"");
+  lines.push("T: " + bt + "\" + 5% cleanup (Blanchard ground) = " + fmt(reqT) + "\"");
+  return { reqL, reqW, reqT, lines };
 }
 
-// ─── Inventory data ──────────────────────────────────────────────────────────
-// MAINTENANCE: Replace or extend these arrays with your live Wix SKU data.
-// The parseSKU() function reads the dimensions directly from the SKU string.
-// No other changes needed when adding new products — just add a variant object.
-const STEELS=[
-  {id:'1084-15n20',name:'1084/15N20 Carbon Damascus',type:'carbon',excl:false,slug:'carbon-damascus-1084',variants:[
-    {sku:'CD.DAMA.TW.001.00/16.25x2.5x0.165',price:112,inStock:true},
-    {sku:'CD.DAMA.LD.001.00/14x2x0.25',price:98,inStock:true},
-    {sku:'CD.DAMA.LD.002.00/10x1.75x0.1875',price:72,inStock:true},
-    {sku:'CD.DAMA.TW.002.00/12x2x0.25',price:89,inStock:true},
-    {sku:'CD.DAMA.FT.001.00/9x1.75x0.1875',price:68,inStock:true},
-    {sku:'CD.DAMA.RD.001.00/8x1.5x0.1875',price:58,inStock:false},
-    {sku:'CD.DAMA.W2.001.00/6x1.5x0.1875',price:48,inStock:true},
+// ═══════════════════════════════════════════════════════════════════════
+// INVENTORY DATA
+// MAINTENANCE: Update SKUs, prices, and inStock flags here when inventory changes.
+// parseSKU() reads dimensions directly from the SKU string — no other changes needed.
+// ═══════════════════════════════════════════════════════════════════════
+const STEELS = [
+  { id:"1084-15n20", name:"1084/15N20 Carbon Damascus", type:"carbon", excl:false, slug:"carbon-damascus-1084", variants:[
+    { sku:"CD.DAMA.TW.001.00/16.25x2.5x0.165", price:112, inStock:true },
+    { sku:"CD.DAMA.LD.001.00/14x2x0.25",       price:98,  inStock:true },
+    { sku:"CD.DAMA.LD.002.00/10x1.75x0.1875",  price:72,  inStock:true },
+    { sku:"CD.DAMA.TW.002.00/12x2x0.25",       price:89,  inStock:true },
+    { sku:"CD.DAMA.FT.001.00/9x1.75x0.1875",   price:68,  inStock:true },
+    { sku:"CD.DAMA.RD.001.00/8x1.5x0.1875",    price:58,  inStock:false },
+    { sku:"CD.DAMA.W2.001.00/6x1.5x0.1875",    price:48,  inStock:true },
   ]},
-  {id:'80crv2',name:'80CrV2 Carbon Damascus',type:'carbon',excl:false,slug:'80crv2-damascus',variants:[
-    {sku:'CD.80CR.FT.001.00/11x2.25x0.25',price:105,inStock:true},
-    {sku:'CD.80CR.TW.001.00/9 x 1.75 x 0.1875',price:82,inStock:true},
-    {sku:'CD.80CR.LD.001.00/14x2x0.25',price:118,inStock:true},
-    {sku:'CD.80CR.RD.001.00/8X1.5X0.1875',price:68,inStock:false},
+  { id:"80crv2", name:"80CrV2 Carbon Damascus", type:"carbon", excl:false, slug:"80crv2-damascus", variants:[
+    { sku:"CD.80CR.FT.001.00/11x2.25x0.25",      price:105, inStock:true },
+    { sku:"CD.80CR.TW.001.00/9 x 1.75 x 0.1875", price:82,  inStock:true },
+    { sku:"CD.80CR.LD.001.00/14x2x0.25",          price:118, inStock:true },
+    { sku:"CD.80CR.RD.001.00/8X1.5X0.1875",       price:68,  inStock:false },
   ]},
-  {id:'52100',name:'52100 Carbon Damascus',type:'carbon',excl:false,slug:'52100-damascus',variants:[
-    {sku:'CD.5210.RD.001.00/10x1.75x0.1875',price:78,inStock:true},
-    {sku:'CD.5210.LD.001.00/12x2x0.25',price:95,inStock:false},
+  { id:"52100", name:"52100 Carbon Damascus", type:"carbon", excl:false, slug:"52100-damascus", variants:[
+    { sku:"CD.5210.RD.001.00/10x1.75x0.1875", price:78, inStock:true },
+    { sku:"CD.5210.LD.001.00/12x2x0.25",      price:95, inStock:false },
   ]},
-  {id:'coppermai',name:'CopperMai Damascus',type:'coppermai',excl:true,slug:'coppermai',variants:[
-    {sku:'CM.DAMA.TW.001.00/9x1.75x0.1875',price:145,inStock:true},
-    {sku:'CM.DAMA.LD.001.00/11x2x0.25',price:168,inStock:false},
-    {sku:'CM.DAMA.RD.001.00/7x1.5x0.1875',price:122,inStock:true},
-    {sku:'CM.DAMA.TW.002.00/14 x 2.5 x 0.25',price:198,inStock:true},
+  { id:"coppermai", name:"CopperMai Damascus", type:"coppermai", excl:true, slug:"coppermai", variants:[
+    { sku:"CM.DAMA.TW.001.00/9x1.75x0.1875",   price:145, inStock:true },
+    { sku:"CM.DAMA.LD.001.00/11x2x0.25",       price:168, inStock:false },
+    { sku:"CM.DAMA.RD.001.00/7x1.5x0.1875",    price:122, inStock:true },
+    { sku:"CM.DAMA.TW.002.00/14 x 2.5 x 0.25", price:198, inStock:true },
   ]},
-  {id:'bronzemai',name:'BronzeMai Damascus',type:'bronzemai',excl:true,slug:'bronzemai',variants:[
-    {sku:'BM.DAMA.TW.001.00/8x1.75x0.1875',price:138,inStock:true},
-    {sku:'BM.DAMA.LD.001.00/10x2x0.25',price:155,inStock:false},
+  { id:"bronzemai", name:"BronzeMai Damascus", type:"bronzemai", excl:true, slug:"bronzemai", variants:[
+    { sku:"BM.DAMA.TW.001.00/8x1.75x0.1875", price:138, inStock:true },
+    { sku:"BM.DAMA.LD.001.00/10x2x0.25",     price:155, inStock:false },
   ]},
-  {id:'nitrov',name:'NitroV Stainless Damascus',type:'stainless',excl:false,slug:'nitrov-stainless',variants:[
-    {sku:'SS.DAMA.TW.001.00/10x2x0.1875',price:118,inStock:true},
-    {sku:'SS.DAMA.LD.001.00/12x2.25x0.25',price:142,inStock:true},
-    {sku:'SS.DAMA.ZS.000.00/16.25x2.5x0.165',price:189,inStock:true},
-    {sku:'SS.DAMA.RD.001.00/8x1.75x0.1875',price:98,inStock:false},
+  { id:"nitrov", name:"NitroV Stainless Damascus", type:"stainless", excl:false, slug:"nitrov-stainless", variants:[
+    { sku:"SS.DAMA.TW.001.00/10x2x0.1875",    price:118, inStock:true },
+    { sku:"SS.DAMA.LD.001.00/12x2.25x0.25",   price:142, inStock:true },
+    { sku:"SS.DAMA.ZS.000.00/16.25x2.5x0.165",price:189, inStock:true },
+    { sku:"SS.DAMA.RD.001.00/8x1.75x0.1875",  price:98,  inStock:false },
   ]},
-  {id:'aebl',name:'AEBL Stainless Damascus',type:'stainless',excl:false,slug:'aebl-stainless',variants:[
-    {sku:'SS.AEBL.RD.001.00/9x1.75x0.1875',price:108,inStock:true},
-    {sku:'SS.AEBL.TW.001.00/11x2x0.25',price:128,inStock:true},
+  { id:"aebl", name:"AEBL Stainless Damascus", type:"stainless", excl:false, slug:"aebl-stainless", variants:[
+    { sku:"SS.AEBL.RD.001.00/9x1.75x0.1875", price:108, inStock:true },
+    { sku:"SS.AEBL.TW.001.00/11x2x0.25",     price:128, inStock:true },
   ]},
-  {id:'154cm',name:'154CM Performance Stainless',type:'stainless',excl:false,slug:'154cm-stainless',variants:[
-    {sku:'SS.154C.LD.001.00/11x2x0.25',price:155,inStock:true},
-    {sku:'SS.154C.TW.001.00/14x2.25x0.25',price:182,inStock:true},
+  { id:"154cm", name:"154CM Performance Stainless", type:"stainless", excl:false, slug:"154cm-stainless", variants:[
+    { sku:"SS.154C.LD.001.00/11x2x0.25",  price:155, inStock:true },
+    { sku:"SS.154C.TW.001.00/14x2.25x0.25",price:182, inStock:true },
   ]},
-  {id:'mosaic',name:'Mosaic Damascus',type:'mosaic',excl:false,slug:'mosaic-damascus',variants:[
-    {sku:'MO.DAMA.CK.001.00/8x1.75x0.1875',price:165,inStock:true},
-    {sku:'MO.DAMA.GS.001.00/10x2x0.25',price:192,inStock:true},
-    {sku:'MO.DAMA.FL.001.00/6x1.5x0.1875',price:142,inStock:false},
+  { id:"mosaic", name:"Mosaic Damascus", type:"mosaic", excl:false, slug:"mosaic-damascus", variants:[
+    { sku:"MO.DAMA.CK.001.00/8x1.75x0.1875", price:165, inStock:true },
+    { sku:"MO.DAMA.GS.001.00/10x2x0.25",     price:192, inStock:true },
+    { sku:"MO.DAMA.FL.001.00/6x1.5x0.1875",  price:142, inStock:false },
   ]},
-  {id:'core',name:'Core Line Damascus',type:'core',excl:false,slug:'core-damascus',variants:[
-    {sku:'CL.DAMA.TW.001.00/8x1.75x0.1875',price:55,inStock:true},
-    {sku:'CL.DAMA.LD.001.00/10x2x0.25',price:68,inStock:true},
-    {sku:'CL.DAMA.RD.001.00/12x2x0.25',price:78,inStock:true},
+  { id:"core", name:"Core Line Damascus", type:"core", excl:false, slug:"core-damascus", variants:[
+    { sku:"CL.DAMA.TW.001.00/8x1.75x0.1875", price:55, inStock:true },
+    { sku:"CL.DAMA.LD.001.00/10x2x0.25",     price:68, inStock:true },
+    { sku:"CL.DAMA.RD.001.00/12x2x0.25",     price:78, inStock:true },
   ]},
 ];
 
-// ─── UI helpers ──────────────────────────────────────────────────────────────
-function updateTangNote(){
-  const t=document.getElementById('tang').value;
-  const n=document.getElementById('tang-note');
-  if(TANG[t]){n.textContent=TANG[t].note;n.className='tang-note show';}
+// ═══════════════════════════════════════════════════════════════════════
+// UI HELPERS
+// ═══════════════════════════════════════════════════════════════════════
+function updateTangNote() {
+  const t = document.getElementById("tang").value;
+  const n = document.getElementById("tang-note");
+  if (TANG[t]) { n.textContent = TANG[t].note; n.className = "tang-note show"; }
 }
-function updatePreview(){
-  const bl=parseFloat(document.getElementById('bl').value);
-  const bw=parseFloat(document.getElementById('bw').value);
-  const bt=parseFloat(document.getElementById('bt').value);
-  const tang=document.getElementById('tang').value;
-  const grind=document.getElementById('grind').checked;
-  const box=document.getElementById('preview');
-  if(bl>0&&bw>0&&bt>0){
-    const{reqL,reqW,reqT,lines}=calcBillet(bl,bw,bt,tang,grind);
-    document.getElementById('pv-val').textContent=fmtDim(reqL,reqW,reqT);
-    document.getElementById('pv-breakdown').textContent=lines.join('\n');
-    box.style.display='block';
+function updatePreview() {
+  const bl = parseFloat(document.getElementById("bl").value);
+  const bw = parseFloat(document.getElementById("bw").value);
+  const bt = parseFloat(document.getElementById("bt").value);
+  const tang = document.getElementById("tang").value;
+  const grind = document.getElementById("grind").checked;
+  const box = document.getElementById("preview");
+  if (bl > 0 && bw > 0 && bt > 0) {
+    const { reqL, reqW, reqT, lines } = calcBillet(bl, bw, bt, tang, grind);
+    document.getElementById("pv-val").textContent = fmtDim(reqL, reqW, reqT);
+    document.getElementById("pv-breakdown").textContent = lines.join("\n");
+    box.style.display = "block";
   } else {
-    box.style.display='none';
+    box.style.display = "none";
   }
 }
-['bl','bw','bt','grind','spref'].forEach(id=>{
-  const el=document.getElementById(id);
-  if(el){el.addEventListener('input',updatePreview);el.addEventListener('change',updatePreview);}
+["bl","bw","bt","grind","spref"].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) { el.addEventListener("input", updatePreview); el.addEventListener("change", updatePreview); }
 });
 updateTangNote();
 
-// ─── Search ──────────────────────────────────────────────────────────────────
-function runSearch(){
-  const bl=parseFloat(document.getElementById('bl').value);
-  const bw=parseFloat(document.getElementById('bw').value);
-  const bt=parseFloat(document.getElementById('bt').value);
-  const tang=document.getElementById('tang').value;
-  const pref=document.getElementById('spref').value;
-  const grind=document.getElementById('grind').checked;
-  if(!bl||!bw||!bt){alert('Please enter blade length, width, and thickness.');return;}
-  const{reqL,reqW,reqT,lines}=calcBillet(bl,bw,bt,tang,grind);
-  let matches=[];
-  STEELS.forEach(steel=>{
-    if(pref!=='any'&&steel.type!==pref) return;
-    steel.variants.forEach(v=>{
-      const d=parseSKU(v.sku);
-      if(!d) return;
-      if(d.l>=reqL&&d.w>=reqW&&d.t>=reqT){
-        const waste=(d.l-reqL)+(d.w-reqW)*3+(d.t-reqT)*10;
-        matches.push({steel,variant:v,dims:d,waste});
+// ═══════════════════════════════════════════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════════════════════════════════════════
+function runSearch() {
+  const bl = parseFloat(document.getElementById("bl").value);
+  const bw = parseFloat(document.getElementById("bw").value);
+  const bt = parseFloat(document.getElementById("bt").value);
+  const tang = document.getElementById("tang").value;
+  const pref = document.getElementById("spref").value;
+  const grind = document.getElementById("grind").checked;
+  if (!bl || !bw || !bt) { alert("Please enter blade length, width, and thickness."); return; }
+  const { reqL, reqW, reqT, lines } = calcBillet(bl, bw, bt, tang, grind);
+  let matches = [];
+  STEELS.forEach(steel => {
+    if (pref !== "any" && steel.type !== pref) return;
+    steel.variants.forEach(v => {
+      const d = parseSKU(v.sku);
+      if (!d) return;
+      if (d.l >= reqL && d.w >= reqW && d.t >= reqT) {
+        const waste = (d.l - reqL) + (d.w - reqW) * 3 + (d.t - reqT) * 10;
+        matches.push({ steel, variant: v, dims: d, waste });
       }
     });
   });
-  matches.sort((a,b)=>a.variant.inStock!==b.variant.inStock?a.variant.inStock?-1:1:a.waste-b.waste);
-  const wrap=document.getElementById('results-wrap');
-  wrap.style.display='block';
-  document.getElementById('results-inner').innerHTML=buildResults(matches,reqL,reqW,reqT,lines,tang);
-  wrap.scrollIntoView({behavior:'smooth',block:'start'});
+  matches.sort((a, b) => a.variant.inStock !== b.variant.inStock ? (a.variant.inStock ? -1 : 1) : a.waste - b.waste);
+  const wrap = document.getElementById("results-wrap");
+  wrap.style.display = "block";
+  document.getElementById("results-inner").innerHTML = buildResults(matches, reqL, reqW, reqT, lines, tang);
+  wrap.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-// ─── Result rendering ────────────────────────────────────────────────────────
-function buildResults(matches,reqL,reqW,reqT,lines,tang){
-  const inStock=matches.filter(m=>m.variant.inStock);
-  const oos=matches.filter(m=>!m.variant.inStock);
-  if(!matches.length) return`<div class="no-res">
-    <h3>No stock match found</h3>
-    <p>We don't currently carry a billet at <strong>${fmtDim(reqL,reqW,reqT)}</strong> or larger.<br>Baker Forge can cut a custom billet to your exact spec — quoted within 1 business day.</p>
-    <button class="btn-steel" onclick="showForm('f-nm')">Request custom billet quote</button>
-  </div>
-  <div id="f-nm" style="display:none">${buildForm('',reqL,reqW,reqT,'f-nm')}</div>`;
-
-  let h=`<div class="res-bar">
-    <span class="res-title">Matching billets</span>
-    ${inStock.length?`<span class="badge badge-green">${inStock.length} in stock</span>`:''}
-    ${oos.length?`<span class="badge badge-amber">${oos.length} out of stock</span>`:''}
-    ${oos.length&&inStock.length?`<button class="oos-btn" id="oos-btn" onclick="toggleOOS()">show out-of-stock</button>`:''}
-  </div>
-  <div class="req"><strong>Required billet: ${fmtDim(reqL,reqW,reqT)}</strong> · ${TANG[tang]?.label||tang}<br>
-  <span style="font-size:11px">${lines.join(' · ')}</span></div>`;
-
-  inStock.forEach((m,i)=>{h+=buildCard(m,i===0,false,reqL,reqW,reqT);});
-  if(oos.length){
-    h+=`<div id="oos-section" style="display:none">`;
-    oos.forEach(m=>{h+=buildCard(m,false,true,reqL,reqW,reqT);});
-    h+=`</div>`;
+// ═══════════════════════════════════════════════════════════════════════
+// RESULT RENDERING
+// ═══════════════════════════════════════════════════════════════════════
+function buildResults(matches, reqL, reqW, reqT, lines, tang) {
+  const inStock = matches.filter(m => m.variant.inStock);
+  const oos = matches.filter(m => !m.variant.inStock);
+  if (!matches.length) return (
+    '<div class="no-res"><h3>No stock match found</h3>' +
+    '<p>We don\'t currently carry a billet at <strong>' + fmtDim(reqL, reqW, reqT) + '</strong> or larger.<br>' +
+    'Baker Forge can cut a custom billet to your exact spec \u2014 quoted within 1 business day.</p>' +
+    '<button class="btn-steel" onclick="showForm(\'f-nm\')">Request custom billet quote</button></div>' +
+    '<div id="f-nm" style="display:none">' + buildForm("", reqL, reqW, reqT, "f-nm") + "</div>"
+  );
+  let h = '<div class="res-bar"><span class="res-title">Matching billets</span>';
+  if (inStock.length) h += '<span class="badge badge-green">' + inStock.length + " in stock</span>";
+  if (oos.length) h += '<span class="badge badge-amber">' + oos.length + " out of stock</span>";
+  if (oos.length && inStock.length) h += '<button class="oos-btn" id="oos-btn" onclick="toggleOOS()">show out-of-stock</button>';
+  h += "</div>";
+  h += '<div class="req">Required billet: <strong>' + fmtDim(reqL, reqW, reqT) + "</strong> \u00b7 " + (TANG[tang] ? TANG[tang].label : tang) + "<br>";
+  h += '<span style="font-size:11px">' + lines.join(" \u00b7 ") + "</span></div>";
+  inStock.forEach((m, i) => { h += buildCard(m, i === 0, false, reqL, reqW, reqT); });
+  if (oos.length) {
+    h += '<div id="oos-section" style="display:none">';
+    oos.forEach(m => { h += buildCard(m, false, true, reqL, reqW, reqT); });
+    h += "</div>";
   }
-  h+=`<div class="cta-row">
-    <span>Need a different size? Baker Forge rolls to order.</span>
-    <button class="btn-steel" onclick="showForm('f-cta')">Request custom quote</button>
-  </div>
-  <div id="f-cta" style="display:none;margin-top:8px">${buildForm('',reqL,reqW,reqT,'f-cta')}</div>`;
+  h += '<div class="cta-row"><span>Need a different size? Baker Forge rolls to order.</span>';
+  h += '<button class="btn-steel" onclick="showForm(\'f-cta\')">Request custom quote</button></div>';
+  h += '<div id="f-cta" style="display:none;margin-top:8px">' + buildForm("", reqL, reqW, reqT, "f-cta") + "</div>";
   return h;
 }
 
-function buildCard(m,isBest,isOOS,reqL,reqW,reqT){
-  const{steel,variant,dims}=m;
-  const surpL=(dims.l-reqL).toFixed(3),surpW=(dims.w-reqW).toFixed(3),surpT=(dims.t-reqT).toFixed(4);
-  const isExact=parseFloat(surpL)<.26&&parseFloat(surpW)<.13&&parseFloat(surpT)<.065;
-  const fid='f-'+variant.sku.replace(/[^a-z0-9]/gi,'_');
-  const url=`https://bakerforge.com/product-page/${steel.slug}?variant=${encodeURIComponent(variant.sku)}&utm_source=steel-finder&utm_medium=widget&utm_campaign=sku-match`;
-  let h=`<div class="card ${isBest?'top':''} ${isOOS?'oos':''}">`;
-  if(isBest) h+=`<span class="best-tag">Best fit</span>`;
-  if(steel.excl) h+=`<span class="excl">★ Baker Forge exclusive</span>`;
-  h+=`<div class="c-top"><div>
-    <div class="c-name">${steel.name}</div>
-    <div class="c-variant">${dims.label}"</div>
-    <div class="c-sku">${variant.sku}</div>
-  </div><div class="c-price">
-    <div class="amt">$${variant.price}</div>
-    <div class="per">per billet</div>
-  </div></div>
-  <div class="dim-row">
-    <span class="dp fit">${dims.l}"</span><span class="sep">×</span>
-    <span class="dp fit">${dims.w}"</span><span class="sep">×</span>
-    <span class="dp fit">${dims.t}"</span>
-  </div>`;
-  if(isOOS) h+=`<div class="c-note note-warn">Out of stock — check bakerforge.com or request a custom cut below</div>`;
-  else if(isExact) h+=`<div class="c-note note-good">Near-exact fit — minimal material waste</div>`;
-  else h+=`<div class="c-note note-surplus">Surplus after your cut: +${surpL}" length · +${surpW}" width · +${surpT}" thickness</div>`;
-  h+=`<div class="actions">`;
-  if(!isOOS) h+=`<a class="btn-primary" href="${url}" target="_blank">View this billet</a>`;
-  h+=`<button class="btn-secondary" onclick="showForm('${fid}')">Need a custom size?</button>
-  </div></div>
-  <div id="${fid}" style="display:none;margin-top:-4px;margin-bottom:10px">${buildForm(steel.name,reqL,reqW,reqT,fid)}</div>`;
+function buildCard(m, isBest, isOOS, reqL, reqW, reqT) {
+  const { steel, variant, dims } = m;
+  const surpL = (dims.l - reqL).toFixed(3), surpW = (dims.w - reqW).toFixed(3), surpT = (dims.t - reqT).toFixed(4);
+  const isExact = parseFloat(surpL) < .26 && parseFloat(surpW) < .13 && parseFloat(surpT) < .065;
+  const fid = "f-" + variant.sku.replace(/[^a-z0-9]/gi, "_");
+  const url = "https://bakerforge.com/product-page/" + steel.slug + "?variant=" + encodeURIComponent(variant.sku) + "&utm_source=steel-finder&utm_medium=widget&utm_campaign=sku-match";
+  let h = '<div class="card ' + (isBest ? "top" : "") + " " + (isOOS ? "oos" : "") + '">';
+  if (isBest) h += '<span class="best-tag">Best fit</span>';
+  if (steel.excl) h += '<span class="excl">\u2605 Baker Forge exclusive</span>';
+  h += '<div class="c-top"><div><div class="c-name">' + steel.name + "</div>";
+  h += '<div class="c-variant">' + dims.label + '"</div>';
+  h += '<div class="c-sku">' + variant.sku + "</div></div>";
+  h += '<div class="c-price"><div class="amt">$' + variant.price + '</div><div class="per">per billet</div></div></div>';
+  h += '<div class="dim-row"><span class="dp fit">' + dims.l + '"</span><span class="sep">\u00d7</span>';
+  h += '<span class="dp fit">' + dims.w + '"</span><span class="sep">\u00d7</span>';
+  h += '<span class="dp fit">' + dims.t + '"</span></div>';
+  if (isOOS) h += '<div class="c-note note-warn">Out of stock \u2014 check bakerforge.com or request a custom cut below</div>';
+  else if (isExact) h += '<div class="c-note note-good">Near-exact fit \u2014 minimal material waste</div>';
+  else h += '<div class="c-note note-surplus">Surplus after your cut: +' + surpL + '" length \u00b7 +' + surpW + '" width \u00b7 +' + surpT + '" thickness</div>';
+  h += '<div class="actions">';
+  if (!isOOS) h += '<a class="btn-primary" href="' + url + '" target="_blank">View this billet</a>';
+  h += '<button class="btn-secondary" onclick="showForm(\'' + fid + '\')">Need a custom size?</button>';
+  h += "</div></div>";
+  h += '<div id="' + fid + '" style="display:none;margin-top:-4px;margin-bottom:10px">' + buildForm(steel.name, reqL, reqW, reqT, fid) + "</div>";
   return h;
 }
 
-function buildForm(steelName,reqL,reqW,reqT,fid){
-  const opts=['1084/15N20 Carbon Damascus','80CrV2 Carbon Damascus','CopperMai Damascus','BronzeMai Damascus','NitroV Stainless Damascus','AEBL Stainless Damascus','154CM Performance Stainless','Mosaic Damascus','Core Line Damascus','Other / Not sure'];
-  const sel=o=>`<option ${steelName===o?'selected':''}>${o}</option>`;
-  return`<div class="form-wrap">
-  <h3>Custom billet request <button class="close-x" onclick="closeForm('${fid}')">×</button></h3>
-  <p class="sub">Baker Forge rolls and cuts custom billets to order. Submit this form for a quote — usually within 1 business day.</p>
-  <div class="fg">
-    <div class="field"><label>First name</label><input type="text" id="${fid}-fn" placeholder="Your name"></div>
-    <div class="field"><label>Email address</label><input type="email" id="${fid}-em" placeholder="you@yourshop.com"></div>
-  </div>
-  <div class="fg">
-    <div class="field"><label>Steel type</label><select id="${fid}-st">${opts.map(sel).join('')}</select></div>
-    <div class="field"><label>Quantity (billets)</label><input type="number" id="${fid}-qty" value="1" min="1"></div>
-  </div>
-  <div class="fg">
-    <div class="field"><label>Length (inches)</label><input type="number" id="${fid}-l" value="${reqL}" step="0.25"></div>
-    <div class="field"><label>Width (inches)</label><input type="number" id="${fid}-w" value="${reqW}" step="0.125"></div>
-  </div>
-  <div class="fg">
-    <div class="field"><label>Thickness (inches)</label><input type="number" id="${fid}-t" value="${reqT}" step="0.0625"></div>
-    <div class="field"><label>Project type</label><select>
-      <option>Hunting / EDC knife</option><option>Kitchen knife</option>
-      <option>Bowie / large blade</option><option>Art / collector piece</option>
-      <option>Production run</option><option>Jewelry / non-blade</option><option>Other</option>
-    </select></div>
-  </div>
-  <div class="fg full">
-    <div class="field"><label>Notes (optional)</label>
-      <textarea id="${fid}-nt" placeholder="Pattern preference, timeline, heat treat needs, quantity discounts..."></textarea>
-    </div>
-  </div>
-  <button class="sub-btn" onclick="submitForm('${fid}')">Submit quote request</button>
-  <div id="${fid}-ok" style="display:none" class="ok-box">Quote request sent. We'll reply within 1 business day.<br><span style="font-size:12px">Questions? support@bakerforge.com</span></div>
-</div>`;
+function buildForm(steelName, reqL, reqW, reqT, fid) {
+  const opts = ["1084/15N20 Carbon Damascus","80CrV2 Carbon Damascus","CopperMai Damascus","BronzeMai Damascus","NitroV Stainless Damascus","AEBL Stainless Damascus","154CM Performance Stainless","Mosaic Damascus","Core Line Damascus","Other / Not sure"];
+  const sel = o => "<option" + (steelName === o ? " selected" : "") + ">" + o + "</option>";
+  return '<div class="form-wrap"><h3>Custom billet request <button class="close-x" onclick="closeForm(\'' + fid + '\')">×</button></h3>' +
+    '<p class="sub">Baker Forge rolls and cuts custom billets to order. Submit for a quote \u2014 usually within 1 business day.</p>' +
+    '<div class="fg"><div class="field"><label>First name</label><input type="text" id="' + fid + '-fn" placeholder="Your name"></div>' +
+    '<div class="field"><label>Email address</label><input type="email" id="' + fid + '-em" placeholder="you@yourshop.com"></div></div>' +
+    '<div class="fg"><div class="field"><label>Steel type</label><select id="' + fid + '-st">' + opts.map(sel).join("") + '</select></div>' +
+    '<div class="field"><label>Quantity (billets)</label><input type="number" id="' + fid + '-qty" value="1" min="1"></div></div>' +
+    '<div class="fg"><div class="field"><label>Length (inches)</label><input type="number" id="' + fid + '-l" value="' + reqL + '" step="0.25"></div>' +
+    '<div class="field"><label>Width (inches)</label><input type="number" id="' + fid + '-w" value="' + reqW + '" step="0.125"></div></div>' +
+    '<div class="fg"><div class="field"><label>Thickness (inches)</label><input type="number" id="' + fid + '-t" value="' + reqT + '" step="0.0625"></div>' +
+    '<div class="field"><label>Project type</label><select>' +
+    '<option>Hunting / EDC knife</option><option>Kitchen knife</option><option>Bowie / large blade</option>' +
+    '<option>Art / collector piece</option><option>Production run</option><option>Jewelry / non-blade</option><option>Other</option>' +
+    '</select></div></div>' +
+    '<div class="fg full"><div class="field"><label>Notes (optional)</label>' +
+    '<textarea id="' + fid + '-nt" placeholder="Pattern preference, timeline, heat treat needs..."></textarea></div></div>' +
+    '<button class="sub-btn" onclick="submitCustomForm(\'' + fid + '\')">Submit quote request</button>' +
+    '<div id="' + fid + '-ok" style="display:none" class="ok-box">Quote request sent. We\'ll reply within 1 business day.<br><span style="font-size:12px">Questions? support@bakerforge.com</span></div>' +
+    "</div>";
 }
 
-function showForm(id){
-  const el=document.getElementById(id);
-  if(!el) return;
-  const open=el.style.display!=='none';
-  el.style.display=open?'none':'block';
-  if(!open) el.scrollIntoView({behavior:'smooth',block:'nearest'});
+function submitCustomForm(fid) {
+  const fn = document.getElementById(fid + "-fn")?.value?.trim();
+  const em = document.getElementById(fid + "-em")?.value?.trim();
+  if (!fn || !em) { alert("Please enter your name and email."); return; }
+  const btn = document.querySelector("#" + CSS.escape(fid) + " .sub-btn");
+  const ok = document.getElementById(fid + "-ok");
+  if (btn) btn.style.display = "none";
+  if (ok) ok.style.display = "block";
 }
-function closeForm(id){const el=document.getElementById(id);if(el)el.style.display='none';}
-function toggleOOS(){
-  const el=document.getElementById('oos-section');
-  const btn=document.getElementById('oos-btn');
-  if(!el) return;
-  const open=el.style.display!=='none';
-  el.style.display=open?'none':'block';
-  if(btn) btn.textContent=open?'show out-of-stock':'hide out-of-stock';
+
+function showForm(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const open = el.style.display !== "none";
+  el.style.display = open ? "none" : "block";
+  if (!open) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
-function submitForm(fid){
-  const fn=document.getElementById(fid+'-fn')?.value?.trim();
-  const em=document.getElementById(fid+'-em')?.value?.trim();
-  if(!fn||!em){alert('Please enter your name and email.');return;}
-  const btn=document.querySelector('#'+CSS.escape(fid)+' .sub-btn');
-  const ok=document.getElementById(fid+'-ok');
-  if(btn) btn.style.display='none';
-  if(ok) ok.style.display='block';
+function closeForm(id) { const el = document.getElementById(id); if (el) el.style.display = "none"; }
+function toggleOOS() {
+  const el = document.getElementById("oos-section");
+  const btn = document.getElementById("oos-btn");
+  if (!el) return;
+  const open = el.style.display !== "none";
+  el.style.display = open ? "none" : "block";
+  if (btn) btn.textContent = open ? "show out-of-stock" : "hide out-of-stock";
 }
 </script>
 </body>
