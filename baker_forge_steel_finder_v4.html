@@ -249,6 +249,13 @@ body::before{content:'';position:fixed;inset:0;background-image:repeating-linear
 window.addEventListener("message", function(e) {
   if (!e.data || !e.data.type) return;
 
+  // Receive live inventory from Wix — replaces demo data
+  if (e.data.type === "LOAD_INVENTORY" && e.data.inventory && e.data.inventory.length > 0) {
+    STEELS.length = 0;
+    e.data.inventory.forEach(function(s) { STEELS.push(s); });
+    console.log("Live inventory loaded:", STEELS.length, "products");
+  }
+
   if (e.data.type === "WIX_MEMBER") {
     localStorage.setItem("bfSteelFinder", JSON.stringify({
       unlocked: true,
