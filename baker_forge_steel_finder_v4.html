@@ -97,27 +97,33 @@ input::-ms-input-placeholder,textarea::-ms-input-placeholder{color:var(--text-mu
 .badge-amber{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(230,126,34,.3)}
 .req{font-family:var(--mono);font-size:12px;color:var(--text-dim);background:var(--dark3);padding:7px 12px;margin-bottom:12px;border:0.5px solid var(--border);line-height:1.7}
 .req strong{color:var(--text)}
-.card{background:var(--dark2);border:1px solid var(--border);padding:1rem 1.25rem;margin-bottom:10px}
+.card{background:var(--dark2);border:1px solid var(--border);padding:14px 16px;margin-bottom:10px}
 .card.top{border-color:var(--or);border-width:2px}
 .card.oos{opacity:.55}
-.c-top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
-.c-img{width:64px;height:64px;object-fit:cover;background:var(--dark3);border:0.5px solid var(--border-lt);flex-shrink:0}
-.c-body{flex:1;min-width:0}
+/* Top-level card is now a flex row: [image] [everything else] */
+.c-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:0}
+.c-img{width:120px;height:120px;object-fit:cover;background:var(--dark3);border:0.5px solid var(--border-lt);flex-shrink:0}
+.c-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+/* Header row inside right column: name on left, price on right */
+.c-header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.c-name-wrap{flex:1;min-width:0}
 .c-price{flex-shrink:0;white-space:nowrap;text-align:right;min-width:72px}
-.c-name{font-family:var(--hd);font-weight:700;font-size:16px;letter-spacing:.04em;text-transform:uppercase;color:var(--text);line-height:1.2}
+.c-name{font-family:var(--hd);font-weight:700;font-size:16px;letter-spacing:.04em;text-transform:uppercase;color:var(--text);line-height:1.2;margin-top:2px}
 .c-price .amt{font-family:var(--mono);font-size:19px;font-weight:500;color:var(--text)}
-.c-price .per{font-size:11px;color:var(--tx3);text-align:right;white-space:nowrap}
-.dim-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:7px}
+.c-price .per{font-size:11px;color:var(--text-muted);text-align:right;white-space:nowrap}
+.dim-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:0}
 .dp{font-family:var(--mono);font-size:12px;padding:4px 9px;background:var(--dark3);border:0.5px solid var(--border);color:var(--text)}
 .dp.fit{background:rgba(200,75,0,.15);border-color:rgba(200,75,0,.4);color:#F26419}
 .sep{font-family:var(--mono);font-size:11px;color:var(--text-muted)}
-.c-note{font-size:12px;margin-bottom:8px}
+.c-note{font-size:12px;margin-bottom:0}
 .note-good{color:var(--green)}
 .note-warn{color:var(--amber);font-style:italic}
 .note-surplus{color:var(--text-muted)}
-.excl{font-family:var(--mono);font-size:10px;letter-spacing:.05em;background:rgba(200,75,0,.15);color:var(--orl);padding:2px 8px;border-radius:100px;display:inline-block;margin-bottom:6px}
-.best-tag{font-family:var(--mono);font-size:10px;letter-spacing:.05em;background:rgba(200,75,0,.1);color:var(--or);padding:2px 8px;border-radius:100px;display:inline-block;margin-bottom:6px;margin-right:4px}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.excl{font-family:var(--mono);font-size:10px;letter-spacing:.05em;background:rgba(200,75,0,.15);color:var(--orl);padding:2px 8px;border-radius:100px;display:inline-block;margin-right:4px}
+.best-tag{font-family:var(--mono);font-size:10px;letter-spacing:.05em;background:rgba(200,75,0,.1);color:var(--or);padding:2px 8px;border-radius:100px;display:inline-block;margin-right:4px}
+.c-badges{margin-bottom:0;display:flex;gap:4px;flex-wrap:wrap}
+.c-badges:empty{display:none}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
 .btn-primary{padding:7px 16px;background:var(--or);color:#fff;border:none;font-family:var(--hd);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-block;transition:background .15s}
 .btn-primary:hover{background:var(--orl)}
 .btn-cart{padding:7px 16px;background:var(--st);color:#fff;border:none;font-family:var(--hd);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-block;transition:background .15s}
@@ -136,11 +142,14 @@ input::-ms-input-placeholder,textarea::-ms-input-placeholder{color:var(--text-mu
 .cta-row span{font-size:13px;color:var(--text-dim)}
 .footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);text-align:center;font-size:12px;color:var(--text-muted)}
 .footer a{color:var(--or);text-decoration:none}
-  @media (max-width:500px){
-  .c-top{gap:9px}
-  .c-img{width:52px;height:52px}
+@media (max-width:500px){
+  .card{padding:12px 12px}
+  .c-top{gap:10px}
+  .c-img{width:88px;height:88px}
+  .c-body{gap:6px}
   .c-price .amt{font-size:17px}
   .c-name{font-size:14px}
+  .c-price{min-width:60px}
 }
 </style>
 </head>
@@ -752,19 +761,38 @@ function buildCard(m, isBest, isOOS, reqL, reqW, reqT) {
             + "&utm_source=steel-finder&utm_medium=widget&utm_campaign=sku-match";
   // Image: use variant.imageUrl first, fall back to steel.imageUrl, else no image
   const img = (variant && variant.imageUrl) || (steel && steel.imageUrl) || "";
-  let h = '<div class="card ' + (isBest ? "top" : "") + " " + (isOOS ? "oos" : "") + '">';
-  if (isBest) h += '<span class="best-tag">Best fit</span>';
   const cats = steel.categories || (steel.type ? [steel.type] : []);
   const isExclusive = steel.excl || cats.includes("copper-sanmai") || cats.includes("bronze-sanmai");
-  if (isExclusive) h += '<span class="excl">\u2605 Baker Forge exclusive</span>';
+
+  let h = '<div class="card ' + (isBest ? "top" : "") + " " + (isOOS ? "oos" : "") + '">';
   h += '<div class="c-top">';
-  if (img) h += '<img class="c-img" src="' + img + '" alt="' + steel.name + '" loading="lazy" onerror="this.style.display=\'none\'">';
-  h += '<div class="c-body"><div class="c-name">' + steel.name + "</div></div>";
+
+  // LEFT: image
+  if (img) h += '<img class="c-img" src="' + img + '" alt="' + escapeAttr(steel.name) + '" loading="lazy" onerror="this.style.display=\'none\'">';
+
+  // RIGHT: all content stacked inside c-body
+  h += '<div class="c-body">';
+
+  // Row 1: badges (best fit, exclusive) if any
+  if (isBest || isExclusive) {
+    h += '<div class="c-badges">';
+    if (isBest)      h += '<span class="best-tag">Best fit</span>';
+    if (isExclusive) h += '<span class="excl">\u2605 Baker Forge exclusive</span>';
+    h += '</div>';
+  }
+
+  // Row 2: name on left, price on right
+  h += '<div class="c-header">';
+  h += '<div class="c-name-wrap"><div class="c-name">' + steel.name + '</div></div>';
   h += '<div class="c-price"><div class="amt">$' + variant.price + '</div><div class="per">per billet</div></div>';
   h += '</div>';
+
+  // Row 3: dimension chips
   h += '<div class="dim-row"><span class="dp fit">' + dims.l + '"</span><span class="sep">\u00d7</span>';
   h += '<span class="dp fit">' + dims.w + '"</span><span class="sep">\u00d7</span>';
   h += '<span class="dp fit">' + dims.t + '"</span></div>';
+
+  // Row 4: status note
   if (isOOS) h += '<div class="c-note note-warn">Out of stock \u2014 check bakerforge.com or request a custom cut below</div>';
   else if (isExact) h += '<div class="c-note note-good">Near-exact fit \u2014 minimal material waste</div>';
   else {
@@ -772,10 +800,11 @@ function buildCard(m, isBest, isOOS, reqL, reqW, reqT) {
     if (parseFloat(surpT) >= 0.005) surplusMsg += ' \u00b7 +' + surpT + '" thickness cleanup';
     h += '<div class="c-note note-surplus">' + surplusMsg + '</div>';
   }
+
+  // Row 5: action buttons
   h += '<div class="actions">';
   if (!isOOS) {
     h += '<a class="btn-primary" href="' + url + '" target="_blank">View this billet</a>';
-    // Add-to-cart button — calls parent Wix page code via postMessage
     h += '<button class="btn-cart" data-slug="' + escapeAttr(steel.slug) + '"'
        + ' data-size="' + escapeAttr(dims.label) + '"'
        + ' data-sku="' + escapeAttr(variant.sku) + '"'
@@ -783,7 +812,11 @@ function buildCard(m, isBest, isOOS, reqL, reqW, reqT) {
        + ' onclick="addBilletToCart(this)">Add to Cart</button>';
   }
   h += '<a class="btn-secondary" href="https://www.bakerforge.com/custom-orders" target="_blank" rel="noopener">Need a custom size?</a>';
-  h += "</div></div>";
+  h += '</div>'; // close actions
+
+  h += '</div>'; // close c-body
+  h += '</div>'; // close c-top
+  h += '</div>'; // close card
   return h;
 }
 
