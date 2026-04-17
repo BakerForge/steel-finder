@@ -227,12 +227,13 @@ body::before{content:'';position:fixed;inset:0;background-image:repeating-linear
         <label>Steel preference</label>
         <select id="spref">
           <option value="any">Any — show all matches</option>
-          <option value="carbon">Carbon Damascus</option>
-          <option value="stainless">Stainless Damascus</option>
-          <option value="coppermai">CopperMai</option>
-          <option value="bronzemai">BronzeMai</option>
-          <option value="mosaic">Mosaic Damascus</option>
-          <option value="core">Core Line</option>
+          <option value="carbon-damascus">Carbon Damascus</option>
+          <option value="stainless-damascus">Stainless Damascus</option>
+          <option value="copper-sanmai">Copper SanMai</option>
+          <option value="bronze-sanmai">Bronze SanMai</option>
+          <option value="steel-sanmai">Steel SanMai</option>
+          <option value="mosaic-damascus">Mosaic Damascus</option>
+          <option value="coreline">CoreLine Steels</option>
         </select>
       </div>
     </div>
@@ -577,7 +578,12 @@ function runSearch() {
   const { reqL, reqW, reqT, lines } = calcBillet(bl, bw, bt, hl, folder, grind);
   let matches = [];
   STEELS.forEach(steel => {
-    if (pref !== "any" && steel.type !== pref) return;
+    if (pref !== "any") {
+      // New format: product has categories array → check if selected category is in the list
+      // Legacy format: product has single type string → check exact match
+      const cats = steel.categories || (steel.type ? [steel.type] : []);
+      if (!cats.includes(pref)) return;
+    }
     steel.variants.forEach(v => {
       const d = parseSKU(v.sku);
       if (!d) return;
@@ -688,7 +694,9 @@ function buildCard(m, isBest, isOOS, reqL, reqW, reqT) {
   const img = (variant && variant.imageUrl) || (steel && steel.imageUrl) || "";
   let h = '<div class="card ' + (isBest ? "top" : "") + " " + (isOOS ? "oos" : "") + '">';
   if (isBest) h += '<span class="best-tag">Best fit</span>';
-  if (steel.excl) h += '<span class="excl">\u2605 Baker Forge exclusive</span>';
+  const cats = steel.categories || (steel.type ? [steel.type] : []);
+  const isExclusive = steel.excl || cats.includes("copper-sanmai") || cats.includes("bronze-sanmai");
+  if (isExclusive) h += '<span class="excl">\u2605 Baker Forge exclusive</span>';
   h += '<div class="c-top">';
   if (img) h += '<img class="c-img" src="' + img + '" alt="' + steel.name + '" loading="lazy" onerror="this.style.display=\'none\'">';
   h += '<div class="c-body"><div class="c-name">' + steel.name + "</div></div>";
