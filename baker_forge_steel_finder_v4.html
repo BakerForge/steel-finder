@@ -69,6 +69,11 @@ body::before{content:'';position:fixed;inset:0;background-image:repeating-linear
 .go-btn:hover{background:var(--orl)}
 .divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
 .res-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.sort-wrap{margin-left:auto;display:flex;align-items:center;gap:6px}
+.sort-wrap label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim)}
+.sort-wrap select{background:var(--dark3);border:0.5px solid var(--border);color:var(--text);font-family:var(--body);font-size:13px;padding:5px 9px;outline:none;cursor:pointer;-webkit-appearance:none;border-radius:0}
+.sort-wrap select:focus{border-color:var(--or)}
+@media(max-width:520px){.sort-wrap{margin-left:0;width:100%;margin-top:6px}.sort-wrap select{flex:1}}
 .res-title{font-family:var(--hd);font-weight:700;font-size:17px;letter-spacing:.04em;text-transform:uppercase;color:var(--text)}
 .badge{font-family:var(--mono);font-size:11px;padding:2px 9px;border-radius:100px}
 .badge-green{background:var(--green-bg);color:var(--green);border:1px solid rgba(76,175,100,.3)}
@@ -481,14 +486,31 @@ function runSearch() {
   matches.sort((a, b) => a.variant.inStock !== b.variant.inStock ? (a.variant.inStock ? -1 : 1) : a.waste - b.waste);
   const wrap = document.getElementById("results-wrap");
   wrap.style.display = "block";
+  window._currentMatches = { matches, reqL, reqW, reqT, lines, tang };
   document.getElementById("results-inner").innerHTML = buildResults(matches, reqL, reqW, reqT, lines, tang);
   wrap.scrollIntoView({ behavior: "smooth", block: "start" });
+  reportHeight();
+}
+
+function applySortAndRender(sortMode) {
+  const s = window._currentMatches;
+  if (!s) return;
+  let sorted = [...s.matches];
+  if (sortMode === "price-low") {
+    sorted.sort((a, b) => a.variant.inStock !== b.variant.inStock ? (a.variant.inStock ? -1 : 1) : a.variant.price - b.variant.price);
+  } else if (sortMode === "price-high") {
+    sorted.sort((a, b) => a.variant.inStock !== b.variant.inStock ? (a.variant.inStock ? -1 : 1) : b.variant.price - a.variant.price);
+  } else {
+    sorted.sort((a, b) => a.variant.inStock !== b.variant.inStock ? (a.variant.inStock ? -1 : 1) : a.waste - b.waste);
+  }
+  document.getElementById("results-inner").innerHTML = buildResults(sorted, s.reqL, s.reqW, s.reqT, s.lines, s.tang, sortMode);
+  reportHeight();
 }
 
 // ═══════════════════════════════════════════════════════════════════════
 // RESULT RENDERING
 // ═══════════════════════════════════════════════════════════════════════
-function buildResults(matches, reqL, reqW, reqT, lines, tang) {
+function buildResults(matches, reqL, reqW, reqT, lines, tang, currentSort) {
   const inStock = matches.filter(m => m.variant.inStock);
   const oos = matches.filter(m => !m.variant.inStock);
   if (!matches.length) return (
@@ -498,10 +520,19 @@ function buildResults(matches, reqL, reqW, reqT, lines, tang) {
     '<button class="btn-steel" onclick="showForm(\'f-nm\')">Request custom billet quote</button></div>' +
     '<div id="f-nm" style="display:none">' + buildForm("", reqL, reqW, reqT, "f-nm") + "</div>"
   );
+  const sort = currentSort || "best";
   let h = '<div class="res-bar"><span class="res-title">Matching billets</span>';
   if (inStock.length) h += '<span class="badge badge-green">' + inStock.length + " in stock</span>";
   if (oos.length) h += '<span class="badge badge-amber">' + oos.length + " out of stock</span>";
   if (oos.length && inStock.length) h += '<button class="oos-btn" id="oos-btn" onclick="toggleOOS()">show out-of-stock</button>';
+  if (matches.length > 1) {
+    h += '<div class="sort-wrap"><label for="sort-sel">Sort</label>';
+    h += '<select id="sort-sel" onchange="applySortAndRender(this.value)">';
+    h += '<option value="best"' + (sort === "best" ? " selected" : "") + ">Best match</option>";
+    h += '<option value="price-low"' + (sort === "price-low" ? " selected" : "") + ">Price: low \u2192 high</option>";
+    h += '<option value="price-high"' + (sort === "price-high" ? " selected" : "") + ">Price: high \u2192 low</option>";
+    h += "</select></div>";
+  }
   h += "</div>";
   h += '<div class="req">Required billet: <strong>' + fmtDim(reqL, reqW, reqT) + "</strong> \u00b7 " + (TANG[tang] ? TANG[tang].label : tang) + "<br>";
   h += '<span style="font-size:11px">' + lines.join(" \u00b7 ") + "</span></div>";
@@ -592,7 +623,45 @@ function toggleOOS() {
   const open = el.style.display !== "none";
   el.style.display = open ? "none" : "block";
   if (btn) btn.textContent = open ? "show out-of-stock" : "hide out-of-stock";
+  reportHeight();
 }
+
+// ═══════════════════════════════════════════════════════════════════════
+// AUTO-RESIZE: posts content height to parent Wix page so iframe grows
+// to fit content, eliminating the nested-scrolling issue.
+// ═══════════════════════════════════════════════════════════════════════
+function reportHeight() {
+  if (!window.parent || window.parent === window) return;
+  // Use the larger of scrollHeight/offsetHeight to avoid clipping
+  const h = Math.max(
+    document.documentElement.scrollHeight,
+    document.body.scrollHeight,
+    document.documentElement.offsetHeight,
+    document.body.offsetHeight
+  );
+  window.parent.postMessage({ type: "SF_HEIGHT", height: h }, "*");
+}
+
+// Report height on initial load + whenever content changes size
+window.addEventListener("load", reportHeight);
+window.addEventListener("resize", reportHeight);
+
+// ResizeObserver catches content changes that don't trigger resize events
+// (like form expansions, dropdown changes, etc.)
+if (typeof ResizeObserver !== "undefined") {
+  const ro = new ResizeObserver(() => reportHeight());
+  ro.observe(document.body);
+}
+
+// Hook reportHeight into existing functions that change layout
+const _origShowForm = showForm;
+showForm = function(id) { _origShowForm(id); setTimeout(reportHeight, 350); };
+
+const _origCloseForm = closeForm;
+closeForm = function(id) { _origCloseForm(id); setTimeout(reportHeight, 50); };
+
+const _origUnlockTool = unlockTool;
+unlockTool = function() { _origUnlockTool(); setTimeout(reportHeight, 50); };
 </script>
 </body>
 </html>
