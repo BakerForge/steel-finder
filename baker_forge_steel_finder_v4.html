@@ -124,26 +124,13 @@ input::-ms-input-placeholder,textarea::-ms-input-placeholder{color:var(--text-mu
 .btn-cart:hover{background:var(--stl)}
 .btn-cart.adding{opacity:.7;cursor:wait}
 .btn-cart.added{background:var(--green);pointer-events:none}
-.btn-secondary{padding:7px 16px;background:transparent;color:var(--text-dim);border:0.5px solid var(--border-lt);font-family:var(--hd);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;display:inline-block;transition:background .15s}
-.btn-secondary:hover{background:var(--dark3)}
-.btn-steel{padding:7px 16px;background:var(--st);color:#fff;border:none;font-family:var(--hd);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background .15s}
-.btn-steel:hover{background:var(--stl)}
+.btn-secondary{padding:7px 16px;background:transparent;color:var(--text-dim);border:0.5px solid var(--border-lt);font-family:var(--hd);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;display:inline-block;text-decoration:none;transition:background .15s}
+.btn-secondary:hover{background:var(--dark3);text-decoration:none;color:var(--text-dim)}
+.btn-steel{padding:7px 16px;background:var(--st);color:#fff;border:none;font-family:var(--hd);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;display:inline-block;text-decoration:none;transition:background .15s}
+.btn-steel:hover{background:var(--stl);text-decoration:none;color:#fff}
 .no-res{background:var(--dark3);border:0.5px solid var(--border);padding:1.5rem;text-align:center;margin-bottom:12px}
 .no-res h3{font-family:var(--hd);font-weight:700;font-size:18px;text-transform:uppercase;color:var(--text);margin-bottom:6px}
 .no-res p{font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:1rem}
-.form-wrap{background:var(--dark2);border:0.5px solid var(--border-lt);padding:1.25rem 1.5rem;margin-top:8px}
-.form-wrap h3{font-family:var(--hd);font-weight:700;font-size:16px;text-transform:uppercase;color:var(--text);margin-bottom:3px;display:flex;justify-content:space-between;align-items:center}
-.form-wrap .sub{font-size:13px;color:var(--text-dim);margin-bottom:1rem;line-height:1.5}
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.fg.full{grid-template-columns:1fr}
-@media(max-width:520px){.fg{grid-template-columns:1fr}}
-.fg .field input,.fg .field select,.fg .field textarea{width:100%;background:var(--dark3);border:1px solid var(--border);color:var(--text);font-family:var(--body);font-size:14px;padding:9px 11px;outline:none;resize:vertical;transition:border-color .15s;border-radius:0}
-.fg .field textarea{min-height:68px}
-.fg .field input:focus,.fg .field textarea:focus,.fg .field select:focus{border-color:var(--or)}
-.sub-btn{width:100%;padding:12px;background:var(--st);color:#fff;border:none;font-family:var(--hd);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:6px;transition:background .15s}
-.sub-btn:hover{background:var(--stl)}
-.ok-box{background:var(--green-bg);color:var(--green);border:1px solid rgba(76,175,100,.3);padding:12px 16px;font-size:14px;text-align:center;margin-top:10px;line-height:1.5}
-.close-x{background:none;border:none;color:var(--text-muted);font-size:19px;cursor:pointer;line-height:1;padding:0}
 .oos-btn{font-size:12px;color:var(--or);cursor:pointer;background:none;border:none;text-decoration:underline;padding:0;font-family:var(--body)}
 .cta-row{margin-top:10px;padding:10px 14px;background:var(--dark3);border:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
 .cta-row span{font-size:13px;color:var(--text-dim)}
@@ -722,8 +709,7 @@ function buildResults(matches, reqL, reqW, reqT, lines, hl, folder, currentSort)
     '<div class="no-res"><h3>No stock match found</h3>' +
     '<p>We don\'t currently carry a billet that fits <strong>' + fmtDim(reqL, reqW, reqT) + '</strong> within our stock tolerances.<br>' +
     'Baker Forge can cut a custom billet to your exact spec \u2014 quoted within 1 business day.</p>' +
-    '<button class="btn-steel" onclick="showForm(\'f-nm\')">Request custom billet quote</button></div>' +
-    '<div id="f-nm" style="display:none">' + buildForm("", reqL, reqW, reqT, "f-nm") + "</div>"
+    '<a class="btn-steel" href="https://www.bakerforge.com/custom-orders" target="_blank" rel="noopener">Request custom billet quote</a></div>'
   );
   const sort = currentSort || "best";
   let h = '<div class="res-bar"><span class="res-title">Matching billets</span>';
@@ -749,8 +735,7 @@ function buildResults(matches, reqL, reqW, reqT, lines, hl, folder, currentSort)
     h += "</div>";
   }
   h += '<div class="cta-row"><span>Need a different size? Baker Forge rolls to order.</span>';
-  h += '<button class="btn-steel" onclick="showForm(\'f-cta\')">Request custom quote</button></div>';
-  h += '<div id="f-cta" style="display:none;margin-top:8px">' + buildForm("", reqL, reqW, reqT, "f-cta") + "</div>";
+  h += '<a class="btn-steel" href="https://www.bakerforge.com/custom-orders" target="_blank" rel="noopener">Request custom quote</a></div>';
   return h;
 }
 
@@ -758,7 +743,6 @@ function buildCard(m, isBest, isOOS, reqL, reqW, reqT) {
   const { steel, variant, dims } = m;
   const surpL = (dims.l - reqL).toFixed(3), surpW = (dims.w - reqW).toFixed(3), surpT = (dims.t - reqT).toFixed(3);
   const isExact = parseFloat(surpL) < .26 && parseFloat(surpW) < .13 && parseFloat(surpT) < .005;
-  const fid = "f-" + variant.sku.replace(/[^a-z0-9]/gi, "_");
   // Product URL with size variant pre-selected. The Wix product page needs the
   // companion page-code snippet (see comment at top of file) to read this param
   // and auto-select the matching size option on load.
@@ -798,53 +782,11 @@ function buildCard(m, isBest, isOOS, reqL, reqW, reqT) {
        + ' data-name="' + escapeAttr(steel.name) + '"'
        + ' onclick="addBilletToCart(this)">Add to Cart</button>';
   }
-  h += '<button class="btn-secondary" onclick="showForm(\'' + fid + '\')">Need a custom size?</button>';
+  h += '<a class="btn-secondary" href="https://www.bakerforge.com/custom-orders" target="_blank" rel="noopener">Need a custom size?</a>';
   h += "</div></div>";
-  h += '<div id="' + fid + '" style="display:none;margin-top:-4px;margin-bottom:10px">' + buildForm(steel.name, reqL, reqW, reqT, fid) + "</div>";
   return h;
 }
 
-function buildForm(steelName, reqL, reqW, reqT, fid) {
-  const opts = ["1084/15N20 Carbon Damascus","80CrV2 Carbon Damascus","CopperMai Damascus","BronzeMai Damascus","NitroV Stainless Damascus","AEBL Stainless Damascus","154CM Performance Stainless","Mosaic Damascus","Core Line Damascus","Other / Not sure"];
-  const sel = o => "<option" + (steelName === o ? " selected" : "") + ">" + o + "</option>";
-  return '<div class="form-wrap"><h3>Custom billet request <button class="close-x" onclick="closeForm(\'' + fid + '\')">×</button></h3>' +
-    '<p class="sub">Baker Forge rolls and cuts custom billets to order. Submit for a quote \u2014 usually within 1 business day.</p>' +
-    '<div class="fg"><div class="field"><label>First name</label><input type="text" id="' + fid + '-fn" placeholder="Your name"></div>' +
-    '<div class="field"><label>Email address</label><input type="email" id="' + fid + '-em" placeholder="you@yourshop.com"></div></div>' +
-    '<div class="fg"><div class="field"><label>Steel type</label><select id="' + fid + '-st">' + opts.map(sel).join("") + '</select></div>' +
-    '<div class="field"><label>Quantity (billets)</label><input type="number" id="' + fid + '-qty" value="1" min="1"></div></div>' +
-    '<div class="fg"><div class="field"><label>Length (inches)</label><input type="number" id="' + fid + '-l" value="' + reqL + '" step="0.25"></div>' +
-    '<div class="field"><label>Width (inches)</label><input type="number" id="' + fid + '-w" value="' + reqW + '" step="0.125"></div></div>' +
-    '<div class="fg"><div class="field"><label>Thickness (inches)</label><input type="number" id="' + fid + '-t" value="' + reqT + '" step="0.0625"></div>' +
-    '<div class="field"><label>Project type</label><select>' +
-    '<option>Hunting / EDC knife</option><option>Kitchen knife</option><option>Bowie / large blade</option>' +
-    '<option>Art / collector piece</option><option>Production run</option><option>Jewelry / non-blade</option><option>Other</option>' +
-    '</select></div></div>' +
-    '<div class="fg full"><div class="field"><label>Notes (optional)</label>' +
-    '<textarea id="' + fid + '-nt" placeholder="Pattern preference, timeline, heat treat needs..."></textarea></div></div>' +
-    '<button class="sub-btn" onclick="submitCustomForm(\'' + fid + '\')">Submit quote request</button>' +
-    '<div id="' + fid + '-ok" style="display:none" class="ok-box">Quote request sent. We\'ll reply within 1 business day.<br><span style="font-size:12px">Questions? support@bakerforge.com</span></div>' +
-    "</div>";
-}
-
-function submitCustomForm(fid) {
-  const fn = document.getElementById(fid + "-fn")?.value?.trim();
-  const em = document.getElementById(fid + "-em")?.value?.trim();
-  if (!fn || !em) { alert("Please enter your name and email."); return; }
-  const btn = document.querySelector("#" + CSS.escape(fid) + " .sub-btn");
-  const ok = document.getElementById(fid + "-ok");
-  if (btn) btn.style.display = "none";
-  if (ok) ok.style.display = "block";
-}
-
-function showForm(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const open = el.style.display !== "none";
-  el.style.display = open ? "none" : "block";
-  if (!open) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
-}
-function closeForm(id) { const el = document.getElementById(id); if (el) el.style.display = "none"; }
 function toggleOOS() {
   const el = document.getElementById("oos-section");
   const btn = document.getElementById("oos-btn");
@@ -883,12 +825,6 @@ if (typeof ResizeObserver !== "undefined") {
 }
 
 // Hook reportHeight into existing functions that change layout
-const _origShowForm = showForm;
-showForm = function(id) { _origShowForm(id); setTimeout(reportHeight, 350); };
-
-const _origCloseForm = closeForm;
-closeForm = function(id) { _origCloseForm(id); setTimeout(reportHeight, 50); };
-
 const _origUnlockTool = unlockTool;
 unlockTool = function() { _origUnlockTool(); setTimeout(reportHeight, 50); };
 </script>
