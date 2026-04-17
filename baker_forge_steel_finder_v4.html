@@ -56,11 +56,24 @@ body::before{content:'';position:fixed;inset:0;background-image:repeating-linear
 .field input:focus,.field select:focus{border-color:var(--or)}
 .field .hint{font-size:11px;color:var(--text-muted);margin-top:3px;font-family:var(--body)}
 .field .hint.good{color:var(--green)}
-.tang-note{font-size:12px;color:var(--text-dim);background:var(--dark3);padding:7px 10px;margin-top:6px;border:0.5px solid var(--border);font-family:var(--body);line-height:1.5;display:none}
-.tang-note.show{display:block}
+.folder-row{display:flex;align-items:center;gap:7px;margin-top:7px}
+.folder-row input[type=checkbox]{width:14px;height:14px;accent-color:var(--or);cursor:pointer;flex-shrink:0}
+.folder-row label{font-size:12px;color:var(--text-dim);cursor:pointer;margin-bottom:0 !important;font-family:var(--body);text-transform:none;letter-spacing:0}
 .toggle-row{display:flex;align-items:center;gap:8px;margin-bottom:14px}
 .toggle-row label{font-size:13px;color:var(--text-dim);cursor:pointer}
 .toggle-row input[type=checkbox]{width:15px;height:15px;accent-color:var(--or);cursor:pointer}
+.info-btn{width:20px;height:20px;border-radius:50%;background:var(--dark3);border:1px solid var(--border-lt);color:var(--text-dim);font-family:var(--mono);font-size:11px;font-weight:500;cursor:pointer;padding:0;line-height:1;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.info-btn:hover{background:var(--or);color:#fff;border-color:var(--or)}
+.info-popup{display:none;background:var(--dark3);border:1px solid var(--or);border-left-width:3px;padding:14px 16px;margin-bottom:14px;font-size:13px;line-height:1.6;color:var(--text-dim)}
+.info-popup.show{display:block}
+.info-popup p{margin-bottom:8px}
+.info-popup p:last-child{margin-bottom:0}
+.info-popup strong{color:var(--text)}
+.info-popup em{color:var(--text);font-style:italic}
+.info-popup-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-family:var(--hd);font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:var(--text)}
+.info-popup-head strong{color:var(--text)}
+.info-close{background:none;border:none;color:var(--text-muted);font-size:20px;cursor:pointer;line-height:1;padding:0}
+.info-close:hover{color:var(--text)}
 .preview-box{background:var(--dark3);border:0.5px solid var(--border-lt);padding:10px 14px;margin-bottom:14px;display:none}
 .preview-box .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px}
 .preview-box .val{font-family:var(--mono);font-size:15px;font-weight:500;color:var(--text)}
@@ -83,11 +96,11 @@ body::before{content:'';position:fixed;inset:0;background-image:repeating-linear
 .card{background:var(--dark2);border:1px solid var(--border);padding:1rem 1.25rem;margin-bottom:10px}
 .card.top{border-color:var(--or);border-width:2px}
 .card.oos{opacity:.55}
-.c-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px}
+.c-top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.c-img{width:64px;height:64px;object-fit:cover;background:var(--dark3);border:0.5px solid var(--border-lt);flex-shrink:0}
+.c-body{flex:1;min-width:0}
 .c-price{flex-shrink:0;white-space:nowrap;text-align:right;min-width:72px}
-.c-name{font-family:var(--hd);font-weight:700;font-size:16px;letter-spacing:.04em;text-transform:uppercase;color:var(--text);margin-bottom:2px}
-.c-variant{font-size:13px;color:var(--text-dim)}
-.c-sku{font-family:var(--mono);font-size:11px;color:var(--text-muted);margin-top:1px}
+.c-name{font-family:var(--hd);font-weight:700;font-size:16px;letter-spacing:.04em;text-transform:uppercase;color:var(--text);line-height:1.2}
 .c-price .amt{font-family:var(--mono);font-size:19px;font-weight:500;color:var(--text)}
 .c-price .per{font-size:11px;color:var(--tx3);text-align:right;white-space:nowrap}
 .dim-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:7px}
@@ -129,11 +142,10 @@ body::before{content:'';position:fixed;inset:0;background-image:repeating-linear
 .footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);text-align:center;font-size:12px;color:var(--text-muted)}
 .footer a{color:var(--or);text-decoration:none}
   @media (max-width:500px){
-  .c-top{gap:6px}
+  .c-top{gap:9px}
+  .c-img{width:52px;height:52px}
   .c-price .amt{font-size:17px}
-  .c-name{font-size:15px}
-  .c-variant{font-size:12px}
-  .c-sku{font-size:10px;word-break:break-all}
+  .c-name{font-size:14px}
 }
 </style>
 </head>
@@ -203,13 +215,13 @@ body::before{content:'';position:fixed;inset:0;background-image:repeating-linear
 
     <div class="g2">
       <div class="field">
-        <label>Tang type</label>
-        <select id="tang" onchange="updateTangNote();updatePreview()">
-          <option value="hidden">Hidden tang</option>
-          <option value="full">Full tang</option>
-          <option value="weld">Weld-on tang</option>
-        </select>
-        <div id="tang-note" class="tang-note"></div>
+        <label>Handle length</label>
+        <input type="number" id="hl" placeholder="4.5" step="0.125" min="0" inputmode="decimal">
+        <div class="hint">inches — add steel for your tang / handle section</div>
+        <div class="folder-row">
+          <input type="checkbox" id="folder" onchange="toggleFolder()">
+          <label for="folder">No handle — I'm making a folder</label>
+        </div>
       </div>
       <div class="field">
         <label>Steel preference</label>
@@ -227,7 +239,17 @@ body::before{content:'';position:fixed;inset:0;background-image:repeating-linear
 
     <div class="toggle-row">
       <input type="checkbox" id="grind" checked>
-      <label for="grind">Add grind stock allowance to length and width</label>
+      <label for="grind">Add extra steel for grinding &amp; shaping (recommended)</label>
+      <button class="info-btn" type="button" onclick="toggleInfo('grind-info')" aria-label="What is grind stock?">?</button>
+    </div>
+    <div id="grind-info" class="info-popup">
+      <div class="info-popup-head">
+        <strong>Why add extra steel?</strong>
+        <button class="info-close" type="button" onclick="toggleInfo('grind-info')" aria-label="Close">&times;</button>
+      </div>
+      <p>When you grind bevels and clean up your profile, you lose material on the edges. If you order a billet that's <em>exactly</em> your finished blade size, you'll grind right through your final shape.</p>
+      <p>Leaving this checked adds <strong>20% extra to length and width</strong> so you have working room to profile, grind bevels, and clean up. For example, a <strong>4&quot; &times; 1.25&quot;</strong> finished blade becomes a <strong>4.75&quot; &times; 1.5&quot;</strong> billet search.</p>
+      <p>Uncheck this only if you've already added your own grind allowance to the dimensions above.</p>
     </div>
 
     <div id="preview" class="preview-box">
@@ -258,6 +280,63 @@ body::before{content:'';position:fixed;inset:0;background-image:repeating-linear
 // Listens for messages from the Wix page code:
 //   WIX_MEMBER     → logged-in user, skip gate entirely
 //   CAPTURE_RESULT → CRM save confirmed, unlock tool
+//   LOAD_INVENTORY → swap demo STEELS for live product data
+//
+// ────────────────────────────────────────────────────────────────────────
+// LIVE INVENTORY MESSAGE FORMAT (from Wix page code → this iframe)
+//
+// Each product in the inventory array should look like this:
+//   {
+//     id: "1084-15n20",
+//     name: "1084/15N20 Carbon Damascus",
+//     type: "carbon",                // carbon | stainless | coppermai | bronzemai | mosaic | core
+//     excl: false,
+//     slug: "carbon-damascus-1084",  // product page slug on bakerforge.com
+//     imageUrl: "https://static.wixstatic.com/media/....jpg",  // ← main product image
+//     variants: [
+//       { sku: "CD.DAMA.TW.001.00/16.25x2.5x0.165", price: 112, inStock: true },
+//       ...
+//     ]
+//   }
+//
+// If a variant has its own image, include imageUrl on the variant — it overrides the steel's.
+//
+// ────────────────────────────────────────────────────────────────────────
+// PRODUCT PAGE VARIANT PRE-SELECT (paste into each product page's Velo code)
+//
+// When the "View this billet" button is clicked, the buyer is sent to:
+//   https://bakerforge.com/product-page/{slug}?size={sizeLabel}&sku={sku}
+//
+// Paste this into each product page so the Size dropdown auto-selects:
+//
+//   import wixLocation from 'wix-location';
+//
+//   $w.onReady(() => {
+//     const q = wixLocation.query;
+//     if (!q || !q.size) return;
+//     // Find the Size option on the product page. Adjust "Size" below if your
+//     // product options are named differently (e.g. "Length x Width x Thickness").
+//     const OPTION_NAME = "Size";
+//     const target = decodeURIComponent(q.size).trim();
+//     try {
+//       const po = $w("#productPage1"); // product page element ID
+//       // Use the Wix Stores Product API to pre-select the option
+//       if (po && po.selectProductOption) {
+//         po.selectProductOption(OPTION_NAME, target);
+//       } else if (po && po.setProductOptions) {
+//         po.setProductOptions({ [OPTION_NAME]: target });
+//       }
+//     } catch (e) {
+//       console.warn("Variant pre-select failed:", e);
+//     }
+//   });
+//
+// If your product page uses a custom layout with a dropdown element instead of
+// the built-in product options, you can instead do:
+//
+//   $w("#sizeDropdown").value = decodeURIComponent(q.size);
+//   $w("#sizeDropdown").onChange && $w("#sizeDropdown").onChange();
+//
 // ═══════════════════════════════════════════════════════════════════════
 window.addEventListener("message", function(e) {
   if (!e.data || !e.data.type) return;
@@ -322,14 +401,12 @@ function submitGate() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// TANG CONFIGURATION
+// HANDLE LENGTH CONFIGURATION
+// Maker enters their own handle/tang length. Folder makers can check "no handle"
+// to search for blade-only billets (common for folder blades).
 // ═══════════════════════════════════════════════════════════════════════
-const TANG = {
-  hidden: { addL:4,   gsL:.20, label:"Hidden tang",    note:"4\" added to billet length for the tang stub." },
-  full:   { addL:5,   gsL:.15, label:"Full tang",      note:"5\" added to billet length — tang runs the full handle." },
-  weld:   { addL:0,   gsL:.20, label:"Weld-on tang",   note:"No length added — you'll weld scrap steel onto the blade. Billet only needs to cover the blade profile." },
-};
-const T_GRIND = 0.05;
+// Billets come Blanchard ground flat — makers buy barstock at their intended spine thickness.
+// No cleanup allowance is added. We still round up to the nearest 1/16" so we match real stock sizes.
 
 // ═══════════════════════════════════════════════════════════════════════
 // SKU PARSER
@@ -353,18 +430,22 @@ const roundUp = (v, i) => Math.ceil(v / i) * i;
 const fmt = n => parseFloat(n.toFixed(4)).toString();
 const fmtDim = (l, w, t) => fmt(l) + "\" \u00d7 " + fmt(w) + "\" \u00d7 " + fmt(t) + "\"";
 
-function calcBillet(bl, bw, bt, tang, grind) {
-  const meta = TANG[tang] || TANG.hidden;
-  const gsL = grind ? meta.gsL : 0;
-  const gsW = grind ? 0.20 : 0;
-  const reqL = roundUp((bl * (1 + gsL)) + meta.addL, 0.25);
-  const reqW = roundUp(bw * (1 + gsW), 0.125);
-  const reqT = roundUp(bt * (1 + T_GRIND), 0.0625);
+function calcBillet(bl, bw, bt, hl, folder, grind) {
+  const gsPct = grind ? 0.20 : 0;
+  const handleAdd = folder ? 0 : (hl || 0);
+  const reqL = roundUp((bl * (1 + gsPct)) + handleAdd, 0.25);
+  const reqW = roundUp(bw * (1 + gsPct), 0.125);
+  const reqT = bt;
   const lines = [];
-  if (tang === "weld") lines.push("L: " + bl + "\" + " + Math.round(gsL*100) + "% grind = " + fmt(reqL) + "\" (no tang add \u2014 weld-on)");
-  else lines.push("L: " + bl + "\" + " + Math.round(gsL*100) + "% grind + " + meta.addL + "\" tang = " + fmt(reqL) + "\"");
-  lines.push("W: " + bw + "\" + " + Math.round(gsW*100) + "% grind = " + fmt(reqW) + "\"");
-  lines.push("T: " + bt + "\" + 5% cleanup (Blanchard ground) = " + fmt(reqT) + "\"");
+  if (folder) {
+    lines.push("L: " + bl + "\" + " + Math.round(gsPct*100) + "% grind stock = " + fmt(reqL) + "\" (folder \u2014 no handle added)");
+  } else if (handleAdd > 0) {
+    lines.push("L: " + bl + "\" + " + Math.round(gsPct*100) + "% grind stock + " + handleAdd + "\" handle = " + fmt(reqL) + "\"");
+  } else {
+    lines.push("L: " + bl + "\" + " + Math.round(gsPct*100) + "% grind stock = " + fmt(reqL) + "\"");
+  }
+  lines.push("W: " + bw + "\" + " + Math.round(gsPct*100) + "% grind stock = " + fmt(reqW) + "\"");
+  lines.push("T: " + bt + "\" spine \u2014 searching for billets " + bt + "\"\u2013" + (bt + 0.025).toFixed(3) + "\" (Blanchard ground, minimal cleanup)");
   return { reqL, reqW, reqT, lines };
 }
 
@@ -374,7 +455,8 @@ function calcBillet(bl, bw, bt, tang, grind) {
 // parseSKU() reads dimensions directly from the SKU string — no other changes needed.
 // ═══════════════════════════════════════════════════════════════════════
 const STEELS = [
-  { id:"1084-15n20", name:"1084/15N20 Carbon Damascus", type:"carbon", excl:false, slug:"carbon-damascus-1084", variants:[
+  { id:"1084-15n20", name:"1084/15N20 Carbon Damascus", type:"carbon", excl:false, slug:"carbon-damascus-1084",
+    imageUrl:"https://static.wixstatic.com/media/placeholder-carbon.jpg", variants:[
     { sku:"CD.DAMA.TW.001.00/16.25x2.5x0.165", price:112, inStock:true },
     { sku:"CD.DAMA.LD.001.00/14x2x0.25",       price:98,  inStock:true },
     { sku:"CD.DAMA.LD.002.00/10x1.75x0.1875",  price:72,  inStock:true },
@@ -383,46 +465,55 @@ const STEELS = [
     { sku:"CD.DAMA.RD.001.00/8x1.5x0.1875",    price:58,  inStock:false },
     { sku:"CD.DAMA.W2.001.00/6x1.5x0.1875",    price:48,  inStock:true },
   ]},
-  { id:"80crv2", name:"80CrV2 Carbon Damascus", type:"carbon", excl:false, slug:"80crv2-damascus", variants:[
+  { id:"80crv2", name:"80CrV2 Carbon Damascus", type:"carbon", excl:false, slug:"80crv2-damascus",
+    imageUrl:"https://static.wixstatic.com/media/placeholder-80crv2.jpg", variants:[
     { sku:"CD.80CR.FT.001.00/11x2.25x0.25",      price:105, inStock:true },
     { sku:"CD.80CR.TW.001.00/9 x 1.75 x 0.1875", price:82,  inStock:true },
     { sku:"CD.80CR.LD.001.00/14x2x0.25",          price:118, inStock:true },
     { sku:"CD.80CR.RD.001.00/8X1.5X0.1875",       price:68,  inStock:false },
   ]},
-  { id:"52100", name:"52100 Carbon Damascus", type:"carbon", excl:false, slug:"52100-damascus", variants:[
+  { id:"52100", name:"52100 Carbon Damascus", type:"carbon", excl:false, slug:"52100-damascus",
+    imageUrl:"https://static.wixstatic.com/media/placeholder-52100.jpg", variants:[
     { sku:"CD.5210.RD.001.00/10x1.75x0.1875", price:78, inStock:true },
     { sku:"CD.5210.LD.001.00/12x2x0.25",      price:95, inStock:false },
   ]},
-  { id:"coppermai", name:"CopperMai Damascus", type:"coppermai", excl:true, slug:"coppermai", variants:[
+  { id:"coppermai", name:"CopperMai Damascus", type:"coppermai", excl:true, slug:"coppermai",
+    imageUrl:"https://static.wixstatic.com/media/placeholder-coppermai.jpg", variants:[
     { sku:"CM.DAMA.TW.001.00/9x1.75x0.1875",   price:145, inStock:true },
     { sku:"CM.DAMA.LD.001.00/11x2x0.25",       price:168, inStock:false },
     { sku:"CM.DAMA.RD.001.00/7x1.5x0.1875",    price:122, inStock:true },
     { sku:"CM.DAMA.TW.002.00/14 x 2.5 x 0.25", price:198, inStock:true },
   ]},
-  { id:"bronzemai", name:"BronzeMai Damascus", type:"bronzemai", excl:true, slug:"bronzemai", variants:[
+  { id:"bronzemai", name:"BronzeMai Damascus", type:"bronzemai", excl:true, slug:"bronzemai",
+    imageUrl:"https://static.wixstatic.com/media/placeholder-bronzemai.jpg", variants:[
     { sku:"BM.DAMA.TW.001.00/8x1.75x0.1875", price:138, inStock:true },
     { sku:"BM.DAMA.LD.001.00/10x2x0.25",     price:155, inStock:false },
   ]},
-  { id:"nitrov", name:"NitroV Stainless Damascus", type:"stainless", excl:false, slug:"nitrov-stainless", variants:[
+  { id:"nitrov", name:"NitroV Stainless Damascus", type:"stainless", excl:false, slug:"nitrov-stainless",
+    imageUrl:"https://static.wixstatic.com/media/placeholder-nitrov.jpg", variants:[
     { sku:"SS.DAMA.TW.001.00/10x2x0.1875",    price:118, inStock:true },
     { sku:"SS.DAMA.LD.001.00/12x2.25x0.25",   price:142, inStock:true },
     { sku:"SS.DAMA.ZS.000.00/16.25x2.5x0.165",price:189, inStock:true },
     { sku:"SS.DAMA.RD.001.00/8x1.75x0.1875",  price:98,  inStock:false },
   ]},
-  { id:"aebl", name:"AEBL Stainless Damascus", type:"stainless", excl:false, slug:"aebl-stainless", variants:[
+  { id:"aebl", name:"AEBL Stainless Damascus", type:"stainless", excl:false, slug:"aebl-stainless",
+    imageUrl:"https://static.wixstatic.com/media/placeholder-aebl.jpg", variants:[
     { sku:"SS.AEBL.RD.001.00/9x1.75x0.1875", price:108, inStock:true },
     { sku:"SS.AEBL.TW.001.00/11x2x0.25",     price:128, inStock:true },
   ]},
-  { id:"154cm", name:"154CM Performance Stainless", type:"stainless", excl:false, slug:"154cm-stainless", variants:[
+  { id:"154cm", name:"154CM Performance Stainless", type:"stainless", excl:false, slug:"154cm-stainless",
+    imageUrl:"https://static.wixstatic.com/media/placeholder-154cm.jpg", variants:[
     { sku:"SS.154C.LD.001.00/11x2x0.25",  price:155, inStock:true },
     { sku:"SS.154C.TW.001.00/14x2.25x0.25",price:182, inStock:true },
   ]},
-  { id:"mosaic", name:"Mosaic Damascus", type:"mosaic", excl:false, slug:"mosaic-damascus", variants:[
+  { id:"mosaic", name:"Mosaic Damascus", type:"mosaic", excl:false, slug:"mosaic-damascus",
+    imageUrl:"https://static.wixstatic.com/media/placeholder-mosaic.jpg", variants:[
     { sku:"MO.DAMA.CK.001.00/8x1.75x0.1875", price:165, inStock:true },
     { sku:"MO.DAMA.GS.001.00/10x2x0.25",     price:192, inStock:true },
     { sku:"MO.DAMA.FL.001.00/6x1.5x0.1875",  price:142, inStock:false },
   ]},
-  { id:"core", name:"Core Line Damascus", type:"core", excl:false, slug:"core-damascus", variants:[
+  { id:"core", name:"Core Line Damascus", type:"core", excl:false, slug:"core-damascus",
+    imageUrl:"https://static.wixstatic.com/media/placeholder-core.jpg", variants:[
     { sku:"CL.DAMA.TW.001.00/8x1.75x0.1875", price:55, inStock:true },
     { sku:"CL.DAMA.LD.001.00/10x2x0.25",     price:68, inStock:true },
     { sku:"CL.DAMA.RD.001.00/12x2x0.25",     price:78, inStock:true },
@@ -432,20 +523,31 @@ const STEELS = [
 // ═══════════════════════════════════════════════════════════════════════
 // UI HELPERS
 // ═══════════════════════════════════════════════════════════════════════
-function updateTangNote() {
-  const t = document.getElementById("tang").value;
-  const n = document.getElementById("tang-note");
-  if (TANG[t]) { n.textContent = TANG[t].note; n.className = "tang-note show"; }
+function toggleFolder() {
+  const folder = document.getElementById("folder").checked;
+  const hl = document.getElementById("hl");
+  if (folder) { hl.value = ""; hl.disabled = true; hl.placeholder = "\u2014"; }
+  else        { hl.disabled = false; hl.placeholder = "4.5"; }
+  updatePreview();
+}
+function toggleInfo(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle("show");
+  setTimeout(() => { if (typeof reportHeight === "function") reportHeight(); }, 50);
 }
 function updatePreview() {
   const bl = parseFloat(document.getElementById("bl").value);
   const bw = parseFloat(document.getElementById("bw").value);
   const bt = parseFloat(document.getElementById("bt").value);
-  const tang = document.getElementById("tang").value;
+  const hl = parseFloat(document.getElementById("hl").value) || 0;
+  const folder = document.getElementById("folder").checked;
   const grind = document.getElementById("grind").checked;
   const box = document.getElementById("preview");
-  if (bl > 0 && bw > 0 && bt > 0) {
-    const { reqL, reqW, reqT, lines } = calcBillet(bl, bw, bt, tang, grind);
+  // Require handle length only if not a folder
+  const handleOK = folder || hl > 0;
+  if (bl > 0 && bw > 0 && bt > 0 && handleOK) {
+    const { reqL, reqW, reqT, lines } = calcBillet(bl, bw, bt, hl, folder, grind);
     document.getElementById("pv-val").textContent = fmtDim(reqL, reqW, reqT);
     document.getElementById("pv-breakdown").textContent = lines.join("\n");
     box.style.display = "block";
@@ -453,11 +555,11 @@ function updatePreview() {
     box.style.display = "none";
   }
 }
-["bl","bw","bt","grind","spref"].forEach(id => {
+["bl","bw","bt","hl","folder","grind","spref"].forEach(id => {
   const el = document.getElementById(id);
   if (el) { el.addEventListener("input", updatePreview); el.addEventListener("change", updatePreview); }
 });
-updateTangNote();
+updatePreview();
 
 // ═══════════════════════════════════════════════════════════════════════
 // SEARCH
@@ -466,28 +568,44 @@ function runSearch() {
   const bl = parseFloat(document.getElementById("bl").value);
   const bw = parseFloat(document.getElementById("bw").value);
   const bt = parseFloat(document.getElementById("bt").value);
-  const tang = document.getElementById("tang").value;
+  const hl = parseFloat(document.getElementById("hl").value) || 0;
+  const folder = document.getElementById("folder").checked;
   const pref = document.getElementById("spref").value;
   const grind = document.getElementById("grind").checked;
   if (!bl || !bw || !bt) { alert("Please enter blade length, width, and thickness."); return; }
-  const { reqL, reqW, reqT, lines } = calcBillet(bl, bw, bt, tang, grind);
+  if (!folder && hl <= 0) { alert("Please enter a handle length, or check \"No handle\" if you're making a folder."); return; }
+  const { reqL, reqW, reqT, lines } = calcBillet(bl, bw, bt, hl, folder, grind);
   let matches = [];
   STEELS.forEach(steel => {
     if (pref !== "any" && steel.type !== pref) return;
     steel.variants.forEach(v => {
       const d = parseSKU(v.sku);
       if (!d) return;
-      if (d.l >= reqL && d.w >= reqW && d.t >= reqT) {
-        const waste = (d.l - reqL) + (d.w - reqW) * 3 + (d.t - reqT) * 10;
-        matches.push({ steel, variant: v, dims: d, waste });
+      // Length and width use ">=" because maker grinds/cuts those down.
+      // Thickness: billet must be AT LEAST the requested spine thickness, but
+      // no more than 0.025" over. This allows oddball stock (0.145", 0.15", 0.165")
+      // to match a nominal spine, while preventing way-oversized billets from showing up.
+      const T_OVER = 0.025;
+      if (d.l >= reqL && d.w >= reqW && d.t >= reqT - 0.001 && d.t <= reqT + T_OVER + 0.001) {
+        // Two-tier ranking: thickness closeness FIRST, then L/W waste.
+        // Snap tSurplus to 0.001" buckets so near-identical thicknesses tie and
+        // get broken by L/W waste (otherwise floating point noise would decide).
+        const tSurplus = Math.round((d.t - reqT) * 1000) / 1000;
+        const lwWaste = (d.l - reqL) + (d.w - reqW) * 3;
+        matches.push({ steel, variant: v, dims: d, tSurplus, lwWaste });
       }
     });
   });
-  matches.sort((a, b) => a.variant.inStock !== b.variant.inStock ? (a.variant.inStock ? -1 : 1) : a.waste - b.waste);
+  // Best-match sort: in-stock first → closest thickness → least L/W waste
+  matches.sort((a, b) => {
+    if (a.variant.inStock !== b.variant.inStock) return a.variant.inStock ? -1 : 1;
+    if (a.tSurplus !== b.tSurplus) return a.tSurplus - b.tSurplus;
+    return a.lwWaste - b.lwWaste;
+  });
   const wrap = document.getElementById("results-wrap");
   wrap.style.display = "block";
-  window._currentMatches = { matches, reqL, reqW, reqT, lines, tang };
-  document.getElementById("results-inner").innerHTML = buildResults(matches, reqL, reqW, reqT, lines, tang);
+  window._currentMatches = { matches, reqL, reqW, reqT, lines, hl, folder };
+  document.getElementById("results-inner").innerHTML = buildResults(matches, reqL, reqW, reqT, lines, hl, folder);
   wrap.scrollIntoView({ behavior: "smooth", block: "start" });
   reportHeight();
 }
@@ -501,21 +619,26 @@ function applySortAndRender(sortMode) {
   } else if (sortMode === "price-high") {
     sorted.sort((a, b) => a.variant.inStock !== b.variant.inStock ? (a.variant.inStock ? -1 : 1) : b.variant.price - a.variant.price);
   } else {
-    sorted.sort((a, b) => a.variant.inStock !== b.variant.inStock ? (a.variant.inStock ? -1 : 1) : a.waste - b.waste);
+    // Best match: in-stock → closest thickness → least L/W waste
+    sorted.sort((a, b) => {
+      if (a.variant.inStock !== b.variant.inStock) return a.variant.inStock ? -1 : 1;
+      if (a.tSurplus !== b.tSurplus) return a.tSurplus - b.tSurplus;
+      return a.lwWaste - b.lwWaste;
+    });
   }
-  document.getElementById("results-inner").innerHTML = buildResults(sorted, s.reqL, s.reqW, s.reqT, s.lines, s.tang, sortMode);
+  document.getElementById("results-inner").innerHTML = buildResults(sorted, s.reqL, s.reqW, s.reqT, s.lines, s.hl, s.folder, sortMode);
   reportHeight();
 }
 
 // ═══════════════════════════════════════════════════════════════════════
 // RESULT RENDERING
 // ═══════════════════════════════════════════════════════════════════════
-function buildResults(matches, reqL, reqW, reqT, lines, tang, currentSort) {
+function buildResults(matches, reqL, reqW, reqT, lines, hl, folder, currentSort) {
   const inStock = matches.filter(m => m.variant.inStock);
   const oos = matches.filter(m => !m.variant.inStock);
   if (!matches.length) return (
     '<div class="no-res"><h3>No stock match found</h3>' +
-    '<p>We don\'t currently carry a billet at <strong>' + fmtDim(reqL, reqW, reqT) + '</strong> or larger.<br>' +
+    '<p>We don\'t currently carry a billet that fits <strong>' + fmtDim(reqL, reqW, reqT) + '</strong> within our stock tolerances.<br>' +
     'Baker Forge can cut a custom billet to your exact spec \u2014 quoted within 1 business day.</p>' +
     '<button class="btn-steel" onclick="showForm(\'f-nm\')">Request custom billet quote</button></div>' +
     '<div id="f-nm" style="display:none">' + buildForm("", reqL, reqW, reqT, "f-nm") + "</div>"
@@ -534,7 +657,8 @@ function buildResults(matches, reqL, reqW, reqT, lines, tang, currentSort) {
     h += "</select></div>";
   }
   h += "</div>";
-  h += '<div class="req">Required billet: <strong>' + fmtDim(reqL, reqW, reqT) + "</strong> \u00b7 " + (TANG[tang] ? TANG[tang].label : tang) + "<br>";
+  const handleLabel = folder ? "Folder (no handle)" : (hl > 0 ? (hl + "\" handle") : "No handle added");
+  h += '<div class="req">Required billet: <strong>' + fmtDim(reqL, reqW, reqT) + "</strong> \u00b7 " + handleLabel + "<br>";
   h += '<span style="font-size:11px">' + lines.join(" \u00b7 ") + "</span></div>";
   inStock.forEach((m, i) => { h += buildCard(m, i === 0, false, reqL, reqW, reqT); });
   if (oos.length) {
@@ -550,23 +674,36 @@ function buildResults(matches, reqL, reqW, reqT, lines, tang, currentSort) {
 
 function buildCard(m, isBest, isOOS, reqL, reqW, reqT) {
   const { steel, variant, dims } = m;
-  const surpL = (dims.l - reqL).toFixed(3), surpW = (dims.w - reqW).toFixed(3), surpT = (dims.t - reqT).toFixed(4);
-  const isExact = parseFloat(surpL) < .26 && parseFloat(surpW) < .13 && parseFloat(surpT) < .065;
+  const surpL = (dims.l - reqL).toFixed(3), surpW = (dims.w - reqW).toFixed(3), surpT = (dims.t - reqT).toFixed(3);
+  const isExact = parseFloat(surpL) < .26 && parseFloat(surpW) < .13 && parseFloat(surpT) < .005;
   const fid = "f-" + variant.sku.replace(/[^a-z0-9]/gi, "_");
-  const url = "https://bakerforge.com/product-page/" + steel.slug + "?variant=" + encodeURIComponent(variant.sku) + "&utm_source=steel-finder&utm_medium=widget&utm_campaign=sku-match";
+  // Product URL with size variant pre-selected. The Wix product page needs the
+  // companion page-code snippet (see comment at top of file) to read this param
+  // and auto-select the matching size option on load.
+  const url = "https://bakerforge.com/product-page/" + steel.slug
+            + "?size=" + encodeURIComponent(dims.label)
+            + "&sku=" + encodeURIComponent(variant.sku)
+            + "&utm_source=steel-finder&utm_medium=widget&utm_campaign=sku-match";
+  // Image: use variant.imageUrl first, fall back to steel.imageUrl, else no image
+  const img = (variant && variant.imageUrl) || (steel && steel.imageUrl) || "";
   let h = '<div class="card ' + (isBest ? "top" : "") + " " + (isOOS ? "oos" : "") + '">';
   if (isBest) h += '<span class="best-tag">Best fit</span>';
   if (steel.excl) h += '<span class="excl">\u2605 Baker Forge exclusive</span>';
-  h += '<div class="c-top"><div><div class="c-name">' + steel.name + "</div>";
-  h += '<div class="c-variant">' + dims.label + '"</div>';
-  h += '<div class="c-sku">' + variant.sku + "</div></div>";
-  h += '<div class="c-price"><div class="amt">$' + variant.price + '</div><div class="per">per billet</div></div></div>';
+  h += '<div class="c-top">';
+  if (img) h += '<img class="c-img" src="' + img + '" alt="' + steel.name + '" loading="lazy" onerror="this.style.display=\'none\'">';
+  h += '<div class="c-body"><div class="c-name">' + steel.name + "</div></div>";
+  h += '<div class="c-price"><div class="amt">$' + variant.price + '</div><div class="per">per billet</div></div>';
+  h += '</div>';
   h += '<div class="dim-row"><span class="dp fit">' + dims.l + '"</span><span class="sep">\u00d7</span>';
   h += '<span class="dp fit">' + dims.w + '"</span><span class="sep">\u00d7</span>';
   h += '<span class="dp fit">' + dims.t + '"</span></div>';
   if (isOOS) h += '<div class="c-note note-warn">Out of stock \u2014 check bakerforge.com or request a custom cut below</div>';
   else if (isExact) h += '<div class="c-note note-good">Near-exact fit \u2014 minimal material waste</div>';
-  else h += '<div class="c-note note-surplus">Surplus after your cut: +' + surpL + '" length \u00b7 +' + surpW + '" width \u00b7 +' + surpT + '" thickness</div>';
+  else {
+    let surplusMsg = 'Surplus after your cut: +' + surpL + '" length \u00b7 +' + surpW + '" width';
+    if (parseFloat(surpT) >= 0.005) surplusMsg += ' \u00b7 +' + surpT + '" thickness cleanup';
+    h += '<div class="c-note note-surplus">' + surplusMsg + '</div>';
+  }
   h += '<div class="actions">';
   if (!isOOS) h += '<a class="btn-primary" href="' + url + '" target="_blank">View this billet</a>';
   h += '<button class="btn-secondary" onclick="showForm(\'' + fid + '\')">Need a custom size?</button>';
