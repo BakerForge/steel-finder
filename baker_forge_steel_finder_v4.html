@@ -116,6 +116,10 @@ body::before{content:'';position:fixed;inset:0;background-image:repeating-linear
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .btn-primary{padding:7px 16px;background:var(--or);color:#fff;border:none;font-family:var(--hd);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-block;transition:background .15s}
 .btn-primary:hover{background:var(--orl)}
+.btn-cart{padding:7px 16px;background:var(--st);color:#fff;border:none;font-family:var(--hd);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-block;transition:background .15s}
+.btn-cart:hover{background:var(--stl)}
+.btn-cart.adding{opacity:.7;cursor:wait}
+.btn-cart.added{background:var(--green);pointer-events:none}
 .btn-secondary{padding:7px 16px;background:transparent;color:var(--text-dim);border:0.5px solid var(--border-lt);font-family:var(--hd);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;display:inline-block;transition:background .15s}
 .btn-secondary:hover{background:var(--dark3)}
 .btn-steel{padding:7px 16px;background:var(--st);color:#fff;border:none;font-family:var(--hd);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background .15s}
@@ -361,6 +365,11 @@ window.addEventListener("message", function(e) {
   if (e.data.type === "CAPTURE_RESULT" && e.data.success) {
     unlockTool();
   }
+
+  // Result of an add-to-cart request — find the button that initiated it and update its state
+  if (e.data.type === "ADD_TO_CART_RESULT") {
+    handleAddToCartResult(e.data);
+  }
 });
 
 // Check localStorage on page load — returning visitors skip gate
@@ -399,6 +408,69 @@ function submitGate() {
   window.parent.postMessage({ type: "CAPTURE_EMAIL", firstName: fn, email: em }, "*");
 
   unlockTool();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// ADD TO CART
+// Sends a message to the parent Wix page code with the product slug + size + sku.
+// Wix page code calls the backend addToCartBySize() and posts back the result.
+// We track which button initiated the request via a short-lived request ID.
+// ═══════════════════════════════════════════════════════════════════════
+let _cartRequestCounter = 0;
+const _pendingCartRequests = {};
+function addBilletToCart(btn) {
+  if (!btn || btn.classList.contains("adding") || btn.classList.contains("added")) return;
+  const slug = btn.getAttribute("data-slug");
+  const size = btn.getAttribute("data-size");
+  const sku  = btn.getAttribute("data-sku");
+  const name = btn.getAttribute("data-name") || "";
+  if (!slug || !size || !sku) { alert("Missing product info — reload and try again."); return; }
+
+  const requestId = "cart-" + (++_cartRequestCounter) + "-" + Date.now();
+  _pendingCartRequests[requestId] = btn;
+  btn.classList.add("adding");
+  btn.textContent = "Adding...";
+
+  window.parent.postMessage({
+    type: "STEEL_FINDER_ADD_TO_CART",
+    requestId: requestId,
+    productSlug: slug,
+    sizeValue: size,
+    sku: sku,
+    productName: name
+  }, "*");
+
+  // Safety timeout — if parent never responds, restore the button after 12 seconds
+  setTimeout(() => {
+    if (_pendingCartRequests[requestId]) {
+      const b = _pendingCartRequests[requestId];
+      delete _pendingCartRequests[requestId];
+      b.classList.remove("adding");
+      b.textContent = "Add to Cart";
+      console.warn("Add-to-cart timed out for request", requestId);
+    }
+  }, 12000);
+}
+function handleAddToCartResult(data) {
+  const btn = data.requestId && _pendingCartRequests[data.requestId];
+  if (!btn) return;
+  delete _pendingCartRequests[data.requestId];
+  btn.classList.remove("adding");
+  if (data.success) {
+    btn.classList.add("added");
+    btn.textContent = "\u2713 Added";
+  } else {
+    btn.textContent = "Add to Cart";
+    alert("Could not add to cart: " + (data.error || "Unknown error") + ".\nPlease try \"View this billet\" instead.");
+  }
+}
+function escapeAttr(s) {
+  return (s || "").toString()
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -713,7 +785,15 @@ function buildCard(m, isBest, isOOS, reqL, reqW, reqT) {
     h += '<div class="c-note note-surplus">' + surplusMsg + '</div>';
   }
   h += '<div class="actions">';
-  if (!isOOS) h += '<a class="btn-primary" href="' + url + '" target="_blank">View this billet</a>';
+  if (!isOOS) {
+    h += '<a class="btn-primary" href="' + url + '" target="_blank">View this billet</a>';
+    // Add-to-cart button — calls parent Wix page code via postMessage
+    h += '<button class="btn-cart" data-slug="' + escapeAttr(steel.slug) + '"'
+       + ' data-size="' + escapeAttr(dims.label) + '"'
+       + ' data-sku="' + escapeAttr(variant.sku) + '"'
+       + ' data-name="' + escapeAttr(steel.name) + '"'
+       + ' onclick="addBilletToCart(this)">Add to Cart</button>';
+  }
   h += '<button class="btn-secondary" onclick="showForm(\'' + fid + '\')">Need a custom size?</button>';
   h += "</div></div>";
   h += '<div id="' + fid + '" style="display:none;margin-top:-4px;margin-bottom:10px">' + buildForm(steel.name, reqL, reqW, reqT, fid) + "</div>";
