@@ -176,7 +176,7 @@ input::-ms-input-placeholder,textarea::-ms-input-placeholder{color:var(--text-mu
           <input type="email" id="gate-em" placeholder="you@yourshop.com">
         </div>
         <button class="gate-btn" onclick="submitGate()">UNLOCK THE TOOL &rarr;</button>
-        <p class="gate-fine">Free. No spam. Unsubscribe anytime.</p>
+        <p class="gate-fine">Free. We'll send you drops and new steel. Unsubscribe anytime.</p>
       </div>
       <p class="gate-proof">Used by thousands of independent makers.</p>
     </div>
@@ -406,7 +406,9 @@ function submitGate() {
     unlocked: true, firstName: fn, email: em
   }));
 
-  window.parent.postMessage({ type: "CAPTURE_EMAIL", firstName: fn, email: em }, "*");
+  // subscribe: true — the gate text tells the visitor they'll get drop and new-steel emails,
+  // so the Wix page code should mark this contact SUBSCRIBED when it saves it.
+  window.parent.postMessage({ type: "CAPTURE_EMAIL", firstName: fn, email: em, subscribe: true }, "*");
 
   unlockTool();
 }
