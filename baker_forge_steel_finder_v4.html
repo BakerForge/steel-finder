@@ -530,71 +530,9 @@ function calcBillet(bl, bw, bt, hl, folder, grind) {
 // MAINTENANCE: Update SKUs, prices, and inStock flags here when inventory changes.
 // parseSKU() reads dimensions directly from the SKU string — no other changes needed.
 // ═══════════════════════════════════════════════════════════════════════
-const STEELS = [
-  { id:"1084-15n20", name:"1084/15N20 Carbon Damascus", type:"carbon", excl:false, slug:"carbon-damascus-1084",
-    imageUrl:"https://static.wixstatic.com/media/placeholder-carbon.jpg", variants:[
-    { sku:"CD.DAMA.TW.001.00/16.25x2.5x0.165", price:112, inStock:true },
-    { sku:"CD.DAMA.LD.001.00/14x2x0.25",       price:98,  inStock:true },
-    { sku:"CD.DAMA.LD.002.00/10x1.75x0.1875",  price:72,  inStock:true },
-    { sku:"CD.DAMA.TW.002.00/12x2x0.25",       price:89,  inStock:true },
-    { sku:"CD.DAMA.FT.001.00/9x1.75x0.1875",   price:68,  inStock:true },
-    { sku:"CD.DAMA.RD.001.00/8x1.5x0.1875",    price:58,  inStock:false },
-    { sku:"CD.DAMA.W2.001.00/6x1.5x0.1875",    price:48,  inStock:true },
-  ]},
-  { id:"80crv2", name:"80CrV2 Carbon Damascus", type:"carbon", excl:false, slug:"80crv2-damascus",
-    imageUrl:"https://static.wixstatic.com/media/placeholder-80crv2.jpg", variants:[
-    { sku:"CD.80CR.FT.001.00/11x2.25x0.25",      price:105, inStock:true },
-    { sku:"CD.80CR.TW.001.00/9 x 1.75 x 0.1875", price:82,  inStock:true },
-    { sku:"CD.80CR.LD.001.00/14x2x0.25",          price:118, inStock:true },
-    { sku:"CD.80CR.RD.001.00/8X1.5X0.1875",       price:68,  inStock:false },
-  ]},
-  { id:"52100", name:"52100 Carbon Damascus", type:"carbon", excl:false, slug:"52100-damascus",
-    imageUrl:"https://static.wixstatic.com/media/placeholder-52100.jpg", variants:[
-    { sku:"CD.5210.RD.001.00/10x1.75x0.1875", price:78, inStock:true },
-    { sku:"CD.5210.LD.001.00/12x2x0.25",      price:95, inStock:false },
-  ]},
-  { id:"coppermai", name:"CopperMai Damascus", type:"coppermai", excl:true, slug:"coppermai",
-    imageUrl:"https://static.wixstatic.com/media/placeholder-coppermai.jpg", variants:[
-    { sku:"CM.DAMA.TW.001.00/9x1.75x0.1875",   price:145, inStock:true },
-    { sku:"CM.DAMA.LD.001.00/11x2x0.25",       price:168, inStock:false },
-    { sku:"CM.DAMA.RD.001.00/7x1.5x0.1875",    price:122, inStock:true },
-    { sku:"CM.DAMA.TW.002.00/14 x 2.5 x 0.25", price:198, inStock:true },
-  ]},
-  { id:"bronzemai", name:"BronzeMai Damascus", type:"bronzemai", excl:true, slug:"bronzemai",
-    imageUrl:"https://static.wixstatic.com/media/placeholder-bronzemai.jpg", variants:[
-    { sku:"BM.DAMA.TW.001.00/8x1.75x0.1875", price:138, inStock:true },
-    { sku:"BM.DAMA.LD.001.00/10x2x0.25",     price:155, inStock:false },
-  ]},
-  { id:"nitrov", name:"NitroV Stainless Damascus", type:"stainless", excl:false, slug:"nitrov-stainless",
-    imageUrl:"https://static.wixstatic.com/media/placeholder-nitrov.jpg", variants:[
-    { sku:"SS.DAMA.TW.001.00/10x2x0.1875",    price:118, inStock:true },
-    { sku:"SS.DAMA.LD.001.00/12x2.25x0.25",   price:142, inStock:true },
-    { sku:"SS.DAMA.ZS.000.00/16.25x2.5x0.165",price:189, inStock:true },
-    { sku:"SS.DAMA.RD.001.00/8x1.75x0.1875",  price:98,  inStock:false },
-  ]},
-  { id:"aebl", name:"AEBL Stainless Damascus", type:"stainless", excl:false, slug:"aebl-stainless",
-    imageUrl:"https://static.wixstatic.com/media/placeholder-aebl.jpg", variants:[
-    { sku:"SS.AEBL.RD.001.00/9x1.75x0.1875", price:108, inStock:true },
-    { sku:"SS.AEBL.TW.001.00/11x2x0.25",     price:128, inStock:true },
-  ]},
-  { id:"154cm", name:"154CM Performance Stainless", type:"stainless", excl:false, slug:"154cm-stainless",
-    imageUrl:"https://static.wixstatic.com/media/placeholder-154cm.jpg", variants:[
-    { sku:"SS.154C.LD.001.00/11x2x0.25",  price:155, inStock:true },
-    { sku:"SS.154C.TW.001.00/14x2.25x0.25",price:182, inStock:true },
-  ]},
-  { id:"mosaic", name:"Mosaic Damascus", type:"mosaic", excl:false, slug:"mosaic-damascus",
-    imageUrl:"https://static.wixstatic.com/media/placeholder-mosaic.jpg", variants:[
-    { sku:"MO.DAMA.CK.001.00/8x1.75x0.1875", price:165, inStock:true },
-    { sku:"MO.DAMA.GS.001.00/10x2x0.25",     price:192, inStock:true },
-    { sku:"MO.DAMA.FL.001.00/6x1.5x0.1875",  price:142, inStock:false },
-  ]},
-  { id:"core", name:"Core Line Damascus", type:"core", excl:false, slug:"core-damascus",
-    imageUrl:"https://static.wixstatic.com/media/placeholder-core.jpg", variants:[
-    { sku:"CL.DAMA.TW.001.00/8x1.75x0.1875", price:55, inStock:true },
-    { sku:"CL.DAMA.LD.001.00/10x2x0.25",     price:68, inStock:true },
-    { sku:"CL.DAMA.RD.001.00/12x2x0.25",     price:78, inStock:true },
-  ]},
-];
+// Filled only by live inventory from the Wix page (LOAD_INVENTORY). No sample data:
+// if the live load fails, the search says inventory is unavailable instead of showing fake billets.
+const STEELS = [];
 
 // ═══════════════════════════════════════════════════════════════════════
 // UI HELPERS
@@ -650,6 +588,16 @@ function runSearch() {
   const grind = document.getElementById("grind").checked;
   if (!bl || !bw || !bt) { alert("Please enter blade length, width, and thickness."); return; }
   if (!folder && hl <= 0) { alert("Please enter a handle length, or check \"No handle\" if you're making a folder."); return; }
+  if (!STEELS.length) {
+    const w = document.getElementById("results-wrap");
+    w.style.display = "block";
+    document.getElementById("results-inner").innerHTML =
+      '<div class="no-res"><h3>Live inventory is still loading</h3>' +
+      '<p>Give it a few seconds and search again. If this keeps showing, refresh the page or ' +
+      '<a href="https://www.bakerforge.com/shop" target="_blank" rel="noopener">browse the shop</a>.</p></div>';
+    reportHeight();
+    return;
+  }
   const { reqL, reqW, reqT, lines } = calcBillet(bl, bw, bt, hl, folder, grind);
   let matches = [];
   STEELS.forEach(steel => {
