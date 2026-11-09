@@ -608,6 +608,7 @@ function runSearch() {
       if (!cats.includes(pref)) return;
     }
     steel.variants.forEach(v => {
+      if (!v.inStock) return; // only live, in-stock billets are shown
       const d = parseSKU(v.sku);
       if (!d) return;
       // Length and width use ">=" because maker grinds/cuts those down.
